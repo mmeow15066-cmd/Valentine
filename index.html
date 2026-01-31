@@ -1,0 +1,85 @@
+```html name=index.html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Valentine's Day — Mi Vida</title>
+
+  <!-- Cursive fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="locked">
+  <!-- LOCK OVERLAY -->
+  <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true">
+    <div class="lock-box">
+      <h1>Enter password</h1>
+      <input id="password-input" type="password" placeholder="Password" aria-label="password" autocomplete="off" />
+      <button id="unlock-btn" type="button">Unlock</button>
+      <p class="hint">Hint: it's a 4-digit code</p>
+      <p id="lock-error" class="error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <!-- Heart animation container (populated after unlock) -->
+  <div id="hearts" class="hearts" aria-hidden="true"></div>
+
+  <!-- MAIN CONTENT (hidden while locked via .locked) -->
+  <header class="cover" aria-hidden="true">
+    <img src="images/cover.jpg" alt="Cover" class="cover-img">
+    <h1 class="cover-title">Happy Valentine's Day<br><span class="sub">mi vida</span></h1>
+  </header>
+
+  <main class="container" aria-hidden="true">
+    <section class="intro">
+      <h2>Te amo mi angel</h2>
+      <p class="lead">This little page is for you — a surprise full of memories.</p>
+    </section>
+
+    <section id="timers" class="timers" aria-hidden="true">
+      <div class="time-card">
+        <h3>Time together</h3>
+        <p id="since">Calculating...</p>
+      </div>
+      <div class="time-card">
+        <h3>Countdown to next anniversary</h3>
+        <p id="countdown">Calculating...</p>
+      </div>
+    </section>
+
+    <section id="gallery" class="gallery-section" aria-hidden="true">
+      <h2>Us</h2>
+      <div class="polaroids">
+        <figure class="polaroid"><img src="images/polaroid1.jpg" alt="Polaroid 1"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="images/polaroid2.jpg" alt="Polaroid 2"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="images/polaroid3.jpg" alt="Polaroid 3"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="images/polaroid4.jpg" alt="Polaroid 4"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="images/polaroid5.jpg" alt="Polaroid 5"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="images/polaroid6.jpg" alt="Polaroid 6"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="images/polaroid7.jpg" alt="Polaroid 7"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="images/polaroid8.jpg" alt="Polaroid 8"><figcaption>Us</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="letter" class="letter-section" aria-hidden="true">
+      <h2>My Love Letter</h2>
+      <div class="letter">
+        <!-- Love letter kept as an image (exactly as requested) -->
+        <img src="images/loveletter.jpg" alt="Love Letter" />
+      </div>
+      <div class="letter-actions">
+        <button id="print-letter" type="button">Print / Save as PDF</button>
+      </div>
+    </section>
+
+    <footer class="footer" aria-hidden="true">
+      <p>Made with ♥</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
