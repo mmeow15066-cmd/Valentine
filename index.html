@@ -1,4 +1,3 @@
-```html name=index.html
 <!doctype html>
 <html lang="en">
 <head>
@@ -29,7 +28,8 @@
 
   <!-- MAIN CONTENT (hidden while locked via .locked) -->
   <header class="cover" aria-hidden="true">
-    <img src="images/cover.jpg" alt="Cover" class="cover-img">
+    <!-- cover image at repo root -->
+    <img src="cover.JPG" alt="Cover" class="cover-img">
     <h1 class="cover-title">Happy Valentine's Day<br><span class="sub">mi vida</span></h1>
   </header>
 
@@ -53,22 +53,22 @@
     <section id="gallery" class="gallery-section" aria-hidden="true">
       <h2>Us</h2>
       <div class="polaroids">
-        <figure class="polaroid"><img src="images/polaroid1.jpg" alt="Polaroid 1"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="images/polaroid2.jpg" alt="Polaroid 2"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="images/polaroid3.jpg" alt="Polaroid 3"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="images/polaroid4.jpg" alt="Polaroid 4"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="images/polaroid5.jpg" alt="Polaroid 5"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="images/polaroid6.jpg" alt="Polaroid 6"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="images/polaroid7.jpg" alt="Polaroid 7"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="images/polaroid8.jpg" alt="Polaroid 8"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="polaroid1.JPG" alt="Polaroid 1" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="polaroid2.JPG" alt="Polaroid 2" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="polaroid3.JPG" alt="Polaroid 3" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="polaroid4.JPG" alt="Polaroid 4" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="polaroid5.JPG" alt="Polaroid 5" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="polaroid6.JPG" alt="Polaroid 6" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="polaroid7.JPG" alt="Polaroid 7" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid"><img src="polaroid8.JPG" alt="Polaroid 8" loading="lazy"><figcaption>Us</figcaption></figure>
       </div>
     </section>
 
     <section id="letter" class="letter-section" aria-hidden="true">
       <h2>My Love Letter</h2>
       <div class="letter">
-        <!-- Love letter kept as an image (exactly as requested) -->
-        <img src="images/loveletter.jpg" alt="Love Letter" />
+        <!-- love letter kept as an image (root-level) -->
+        <img id="loveletter-img" src="loveletter.JPG" alt="Love Letter" style="cursor:pointer" />
       </div>
       <div class="letter-actions">
         <button id="print-letter" type="button">Print / Save as PDF</button>
@@ -79,6 +79,38 @@
       <p>Made with ♥</p>
     </footer>
   </main>
+
+  <!-- LETTER MODAL (starts hidden). Clicking the letter opens this -->
+  <div id="letter-modal" class="modal" aria-hidden="true" role="dialog" aria-label="Love letter">
+    <button id="modal-close" class="modal-close" aria-label="Close letter">✕</button>
+
+    <div class="modal-content">
+      <div class="left-col">
+        <!-- show a larger version of the letter -->
+        <img id="modal-letter-img" src="loveletter.JPG" alt="Love Letter (expanded)">
+      </div>
+
+      <div class="right-col">
+        <!-- lilies will appear here -->
+        <img id="lilies" src="lilies.JPG" alt="Bouquet of lilies" />
+        <!-- flower message appears when lilies show -->
+        <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true"></p>
+
+        <!-- Music controls (hidden until modal opens) -->
+        <div id="music-controls" class="music-controls" aria-hidden="true" style="display:none">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button id="play-btn" aria-label="Play">Play</button>
+            <button id="pause-btn" aria-label="Pause" style="display:none">Pause</button>
+          </div>
+          <label for="volume" style="font-size:0.9rem;color:var(--muted)">Volume</label>
+          <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden audio element (place your music.mp3 at repo root) -->
+  <audio id="bg-music" src="music.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
