@@ -4,10 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Happy Valentine's Day — Mi Vida</title>
-
-  <!-- Cursive fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -23,12 +20,9 @@
     </div>
   </div>
 
-  <!-- Heart animation container (populated after unlock) -->
   <div id="hearts" class="hearts" aria-hidden="true"></div>
 
-  <!-- MAIN CONTENT (hidden while locked via .locked) -->
   <header class="cover" aria-hidden="true">
-    <!-- cover image at repo root -->
     <img src="cover.JPG" alt="Cover" class="cover-img">
     <h1 class="cover-title">Happy Valentine's Day<br><span class="sub">mi vida</span></h1>
   </header>
@@ -67,11 +61,14 @@
     <section id="letter" class="letter-section" aria-hidden="true">
       <h2>My Love Letter</h2>
       <div class="letter">
-        <!-- love letter kept as an image (root-level) -->
-        <img id="loveletter-img" src="loveletter.JPG" alt="Love Letter" style="cursor:pointer" />
+        <!-- link to dedicated letter page -->
+        <a href="letter.html" aria-label="Open the full love letter">
+          <img src="loveletter.JPG" alt="Love Letter (thumbnail)" />
+        </a>
       </div>
       <div class="letter-actions">
-        <button id="print-letter" type="button">Print / Save as PDF</button>
+        <!-- link to flowers page -->
+        <a class="btn" href="flowers.html">Open flowers</a>
       </div>
     </section>
 
@@ -79,38 +76,6 @@
       <p>Made with ♥</p>
     </footer>
   </main>
-
-  <!-- LETTER MODAL (starts hidden). Clicking the letter opens this -->
-  <div id="letter-modal" class="modal" aria-hidden="true" role="dialog" aria-label="Love letter">
-    <button id="modal-close" class="modal-close" aria-label="Close letter">✕</button>
-
-    <div class="modal-content">
-      <div class="left-col">
-        <!-- show a larger version of the letter -->
-        <img id="modal-letter-img" src="loveletter.JPG" alt="Love Letter (expanded)">
-      </div>
-
-      <div class="right-col">
-        <!-- lilies will appear here -->
-        <img id="lilies" src="lilies.JPG" alt="Bouquet of lilies" />
-        <!-- flower message appears when lilies show -->
-        <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true"></p>
-
-        <!-- Music controls (hidden until modal opens) -->
-        <div id="music-controls" class="music-controls" aria-hidden="true" style="display:none">
-          <div style="display:flex;gap:8px;align-items:center;">
-            <button id="play-btn" aria-label="Play">Play</button>
-            <button id="pause-btn" aria-label="Pause" style="display:none">Pause</button>
-          </div>
-          <label for="volume" style="font-size:0.9rem;color:var(--muted)">Volume</label>
-          <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hidden audio element (place your music.mp3 at repo root) -->
-  <audio id="bg-music" src="music.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
