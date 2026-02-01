@@ -167,25 +167,27 @@ function initLetterPage(){
    ------------------------- */
 function initFlowersPage(){
   const flowersFull = document.getElementById('flowers-full');
+  const flowerMessage = document.getElementById('flower-message');
+
+  // message text exactly as requested
+  const MESSAGE = "i hate the distance and im sorry i couldnt bring you flowers mi vida i promise you ill make it up to you one day";
+
   if(!flowersFull) return;
-  // optionally: clicking full flower could open fullscreen or animate — keep simple for now
+
+  // reveal message immediately when page shows (with a small delay so transition runs)
+  if(flowerMessage){
+    // set text and make it readable for screen readers
+    flowerMessage.textContent = MESSAGE;
+    flowerMessage.setAttribute('aria-hidden', 'false');
+
+    // small timeout so the CSS transition animates
+    setTimeout(()=> {
+      flowerMessage.classList.add('show');
+    }, 60);
+  }
+
+  // optional: clicking the image opens it in a new tab on small screens
   flowersFull.addEventListener('click', ()=>{
-    // on small screens open the image in a new tab for full view
     if(window.innerWidth < 900) window.open(flowersFull.src, '_blank');
   });
 }
-
-/* -------------------------
-   Run appropriate initializers
-   ------------------------- */
-document.addEventListener('DOMContentLoaded', ()=>{
-  // index page items
-  initUnlock();
-  initTimers();
-
-  // letter page
-  initLetterPage();
-
-  // flowers page
-  initFlowersPage();
-});
