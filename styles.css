@@ -16,6 +16,16 @@ body{
   -moz-osx-font-smoothing:grayscale;
 }
 
+/* Hide underlying content while locked */
+body.locked {
+  overflow: hidden;
+}
+body.locked .cover,
+body.locked .container,
+body.locked .hearts {
+  display: none;
+}
+
 /* Shared button/link */
 .btn{
   display:inline-block;
@@ -25,6 +35,7 @@ body{
   border-radius:8px;
   text-decoration:none;
   font-weight:600;
+  cursor:pointer;
 }
 
 /* Back link */
@@ -129,24 +140,23 @@ body{
   .polaroid{ width:100%; }
   .cover-title{ font-size:2.2rem; }
   .flower-figure img, .letter-wrap img{ max-height:60vh; object-fit:cover; }
-  /* Flower message (shown on flowers page) */
-.flower-message{
-  margin-top:14px;
-  font-family:"Dancing Script", cursive;
-  font-size:1.05rem;
-  color:var(--accent);
-  text-align:center;
-  opacity:0;
-  transform:translateY(8px) scale(0.98);
-  transition: all 550ms cubic-bezier(.2,.9,.3,1);
-  max-width:900px;
-  line-height:1.4;
-  margin-left:auto;
-  margin-right:auto;
-  padding:0 12px;
-}
-.flower-message.show{
-  opacity:1;
-  transform:translateY(0) scale(1);
-}
+  .flower-message{
+    margin-top:14px;
+    font-family:"Dancing Script", cursive;
+    font-size:1.05rem;
+    color:var(--accent);
+    text-align:center;
+    opacity:0;
+    transform:translateY(8px) scale(0.98);
+    transition: all 550ms cubic-bezier(.2,.9,.3,1);
+    max-width:900px;
+    line-height:1.4;
+    margin-left:auto;
+    margin-right:auto;
+    padding:0 12px;
+  }
+  .flower-message.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
 }
