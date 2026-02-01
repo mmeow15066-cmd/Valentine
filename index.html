@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="A small Valentine's surprise — a little site of memories." />
   <title>Happy Valentine's Day — Mi Vida</title>
+  <meta name="description" content="A small Valentine's surprise — memories, a letter and flowers.">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="locked">
   <!-- LOCK OVERLAY -->
-  <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title">
+  <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
       <input id="password-input" type="password" placeholder="Password" aria-label="Password" autocomplete="off" />
       <button id="unlock-btn" type="button">Unlock</button>
-      <p class="hint">Hint: it's a 4-digit code</p>
+      <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
       <p id="lock-error" class="error" aria-live="polite"></p>
     </div>
   </div>
@@ -24,7 +24,8 @@
   <div id="hearts" class="hearts" aria-hidden="true"></div>
 
   <header class="cover" aria-hidden="true">
-    <img src="cover.jpg" alt="Cover (soft background)" class="cover-img">
+    <!-- ensure this file exists as cover.jpg (case-sensitive on many hosts) -->
+    <img src="cover.jpg" alt="Soft background of flowers" class="cover-img">
     <h1 class="cover-title">Happy Valentine's Day<br><span class="sub">mi vida</span></h1>
   </header>
 
@@ -47,28 +48,26 @@
 
     <section id="gallery" class="gallery-section" aria-hidden="true">
       <h2>Us</h2>
-      <div class="polaroids">
-        <figure class="polaroid"><img src="polaroid1.jpg" alt="Polaroid photo" loading="lazy"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="polaroid2.jpg" alt="Polaroid photo" loading="lazy"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="polaroid3.jpg" alt="Polaroid photo" loading="lazy"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="polaroid4.jpg" alt="Polaroid photo" loading="lazy"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="polaroid5.jpg" alt="Polaroid photo" loading="lazy"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="polaroid6.jpg" alt="Polaroid photo" loading="lazy"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="polaroid7.jpg" alt="Polaroid photo" loading="lazy"><figcaption>Us</figcaption></figure>
-        <figure class="polaroid"><img src="polaroid8.jpg" alt="Polaroid photo" loading="lazy"><figcaption>Us</figcaption></figure>
+      <div class="polaroids" role="list">
+        <figure class="polaroid" role="listitem"><img src="polaroid1.jpg" alt="Us at the beach" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid" role="listitem"><img src="polaroid2.jpg" alt="Coffee together" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid" role="listitem"><img src="polaroid3.jpg" alt="Smiles" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid" role="listitem"><img src="polaroid4.jpg" alt="City walk" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid" role="listitem"><img src="polaroid5.jpg" alt="Date night" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid" role="listitem"><img src="polaroid6.jpg" alt="Laughing together" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid" role="listitem"><img src="polaroid7.jpg" alt="Hug" loading="lazy"><figcaption>Us</figcaption></figure>
+        <figure class="polaroid" role="listitem"><img src="polaroid8.jpg" alt="A candid moment" loading="lazy"><figcaption>Us</figcaption></figure>
       </div>
     </section>
 
     <section id="letter" class="letter-section" aria-hidden="true">
       <h2>My Love Letter</h2>
       <div class="letter">
-        <!-- link to dedicated letter page -->
         <a href="letter.html" aria-label="Open the full love letter">
           <img src="loveletter.jpg" alt="Love Letter (thumbnail)" />
         </a>
       </div>
       <div class="letter-actions">
-        <!-- link to flowers page -->
         <a class="btn" href="flowers.html">Open flowers</a>
       </div>
     </section>
@@ -78,6 +77,6 @@
     </footer>
   </main>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
