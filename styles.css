@@ -22,8 +22,10 @@ body.locked {
 }
 body.locked .cover,
 body.locked .container,
-body.locked .hearts {
-  display: none;
+body.locked .hearts,
+body.locked .letter-only,
+body.locked .flower-only {
+  display: none !important;
 }
 
 /* Shared button/link */
@@ -124,14 +126,14 @@ body.locked .hearts {
 .footer{ text-align:center; margin-top:2rem; color:var(--muted); }
 
 /* Locks & hearts (index only) */
-.overlay{ position:fixed; inset:0; background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45)); z-index:40; display:flex; align-items:center; justify-content:center; }
+.overlay{ position:fixed; inset:0; background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45)); z-index:400; display:flex; align-items:center; justify-content:center; }
 .lock-box{ background:linear-gradient(180deg,#fff,#fff6f8); border-radius:14px; padding:1.6rem; width:320px; box-shadow:0 16px 48px rgba(0,0,0,0.4); text-align:center; }
 .lock-box h1{ margin:0 0 0.6rem; font-family:"Great Vibes",cursive; color:var(--accent); font-size:2rem; }
 .lock-box input{ width:100%; padding:0.6rem 0.75rem; margin-bottom:0.5rem; border-radius:8px; border:1px solid #e3d7db; font-size:1rem; }
 .lock-box button{ width:100%; padding:0.6rem; border-radius:8px; border:none; background:var(--accent); color:white; font-weight:600; cursor:pointer; }
 .lock-box .hint{ font-size:0.85rem; color:var(--muted); margin-top:0.5rem;}
 .error{ color:#c82333; margin-top:0.5rem; }
-.hearts{ pointer-events:none; position:fixed; left:0; right:0; bottom:0; top:0; z-index:30; overflow:hidden; }
+.hearts{ pointer-events:none; position:fixed; left:0; right:0; bottom:0; top:0; z-index:300; overflow:hidden; }
 .heart{ position:absolute; font-size:20px; color:var(--accent); opacity:0; transform:translateY(0) scale(0.9); animation: floatUp linear forwards; text-shadow:0 1px 0 rgba(255,255,255,0.2); }
 @keyframes floatUp { 0% { opacity:0; transform: translateY(0) scale(0.9);} 10% { opacity:1; transform: translateY(-20px) scale(1);} 100% { opacity:0; transform: translateY(-420px) scale(1.2);} }
 
