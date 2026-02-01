@@ -8,15 +8,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="letter-page">
-  <main class="letter-only container">
+<body class="locked letter-page">
+  <!-- LOCK OVERLAY (same one as index) -->
+  <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint">
+    <div class="lock-box" role="document">
+      <h1 id="lock-title">Enter password</h1>
+      <input id="password-input" type="password" placeholder="Password" aria-label="Password" autocomplete="off" />
+      <button id="unlock-btn" type="button">Unlock</button>
+      <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
+      <p id="lock-error" class="error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <main class="letter-only container" aria-hidden="true">
     <a class="back-link" href="index.html">← Back</a>
 
     <div class="letter-wrap">
-      <img id="letter-full" src="loveletter.jpg" alt="Love Letter (full)" />
+      <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" />
       <p id="letter-instructions" class="muted small">Click the letter to reveal a message and play the music.</p>
 
-      <!-- hidden message revealed on click -->
+      <!-- hidden message revealed on click (or after unlock) -->
       <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true"></p>
 
       <div id="music-controls" class="music-controls" aria-hidden="true" style="display:none">
