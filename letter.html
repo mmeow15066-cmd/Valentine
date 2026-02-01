@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Love Letter — Mi Vida</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="letter-page">
+  <main class="letter-only container">
+    <a class="back-link" href="index.html">← Back</a>
+
+    <div class="letter-wrap">
+      <!-- large letter image; clicking reveals the message and attempts to play music -->
+      <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" />
+      <p id="letter-instructions" class="muted small">Click the letter to reveal a message and play the music.</p>
+
+      <!-- hidden message revealed on click -->
+      <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true"></p>
+
+      <!-- audio (must exist at repo root as music.mp3). Play is triggered by click. -->
+      <div id="music-controls" class="music-controls" aria-hidden="true" style="display:none">
+        <button id="play-btn">Play music</button>
+        <button id="pause-btn" style="display:none">Pause</button>
+        <label for="volume" class="small muted">Volume</label>
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8" />
+      </div>
+
+      <!-- link to the flowers page -->
+      <p style="margin-top:18px"><a class="btn" href="flowers.html">View the flowers</a></p>
+    </div>
+  </main>
+
+  <audio id="bg-music" src="music.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
