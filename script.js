@@ -1,11 +1,16 @@
 // Shared behavior across pages
-// Safe to include on every page — each init function returns early if required elements are missing.
-
+// NOTE: Password is client-side and visible in source (for a private surprise this is OK).
 const UNLOCK_KEY = 'valentine_unlocked';
-const CORRECT_PASS = '0410'; // NOTE: client-side password is visible in source. That's expected for a local surprise.
+const CORRECT_PASS = '0410';
+
+// Utility: check unlocked
+function isUnlocked(){
+  try { return localStorage.getItem(UNLOCK_KEY) === '1'; } catch(e){ return false; }
+}
 
 // ---- Unlock / overlay ----
 function initUnlock(){
+  // overlay elements are included on every page
   const overlay = document.getElementById('lock-overlay');
   const input = document.getElementById('password-input');
   const unlockBtn = document.getElementById('unlock-btn');
@@ -16,9 +21,9 @@ function initUnlock(){
   if(!overlay || !input || !unlockBtn) return;
 
   let heartsInterval = null;
-  let createdHeartCount = 0;
 
   function createHeart(){
+    if(!heartsContainer) return;
     const h = document.createElement('div');
     h.className = 'heart';
     h.textContent = '❤';
@@ -31,8 +36,6 @@ function initUnlock(){
     const size = 14 + Math.floor(Math.random()*28);
     h.style.fontSize = size + 'px';
     heartsContainer.appendChild(h);
-    createdHeartCount++;
-    // remove after animation finishes
     setTimeout(()=> { if(h && h.parentNode) h.parentNode.removeChild(h); }, (dur + delay) * 1000 + 600);
   }
 
@@ -45,107 +48,63 @@ function initUnlock(){
     if(heartsInterval) { clearInterval(heartsInterval); heartsInterval = null; }
   }
 
-  function showContent(){
+  function revealSite(){
     body.classList.remove('locked');
-    // Remove the overlay from the accessibility tree
     overlay.style.display = 'none';
-    // Reveal UI for screen readers
-    document.querySelectorAll('.cover, .container, .hearts').forEach(el=>{
+    document.querySelectorAll('.cover, .container, .hearts, .letter-only, .flower-only').forEach(el=>{
       el.removeAttribute('aria-hidden');
       el.style.display = '';
     });
+    startHearts();
+    // dispatch event so pages waiting for unlock can act
+    document.dispatchEvent(new Event('site-unlocked'));
   }
 
-  function hideContent(){
+  function hideSite(){
     body.classList.add('locked');
     overlay.style.display = '';
-    document.querySelectorAll('.cover, .container, .hearts').forEach(el=>{
+    document.querySelectorAll('.cover, .container, .hearts, .letter-only, .flower-only').forEach(el=>{
       el.setAttribute('aria-hidden','true');
-      // do not set inline display here; CSS handles hiding when body.locked is present
     });
+    stopHearts();
   }
 
-  function setUnlocked(){
-    showContent();
-    try { localStorage.setItem(UNLOCK_KEY, '1'); } catch(e){}
-    startHearts();
-    // show a small relock control for convenience (non-intrusive)
-    addRelockButton();
-  }
-
-  function addRelockButton(){
-    if(document.getElementById('relock-btn')) return;
-    const btn = document.createElement('button');
-    btn.id = 'relock-btn';
-    btn.textContent = 'Lock';
-    btn.title = 'Re-lock the page';
-    btn.className = 'btn';
-    btn.style.position = 'fixed';
-    btn.style.right = '14px';
-    btn.style.bottom = '14px';
-    btn.style.zIndex = 50;
-    btn.addEventListener('click', ()=>{
-      try { localStorage.removeItem(UNLOCK_KEY); } catch(e){}
-      stopHearts();
-      hideContent();
-      input.value = '';
-      errorP.textContent = '';
-      overlay.focus();
-      // remove relock button
-      btn.remove();
-      // ensure overlay is focusable
-      trapFocusInOverlay();
-    });
-    document.body.appendChild(btn);
-  }
-
-  // Focus trap for overlay (simple)
-  function trapFocusInOverlay(){
+  // Focus trap: simple first/last node trap
+  function trapFocus(){
     const focusable = overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-    const focusableArray = Array.prototype.slice.call(focusable);
-    if(focusableArray.length === 0) return;
-    let first = focusableArray[0];
-    let last = focusableArray[focusableArray.length - 1];
+    const nodes = Array.prototype.slice.call(focusable);
+    if(nodes.length === 0) return;
+    const first = nodes[0], last = nodes[nodes.length - 1];
     function keyHandler(e){
       if(e.key === 'Tab'){
-        if(e.shiftKey && document.activeElement === first){
-          e.preventDefault();
-          last.focus();
-        } else if(!e.shiftKey && document.activeElement === last){
-          e.preventDefault();
-          first.focus();
-        }
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
       } else if(e.key === 'Escape'){
-        // Clear input and error on Escape for a better UX
+        // UX: clear any error and input
         input.value = '';
         errorP.textContent = '';
       }
     }
     overlay.addEventListener('keydown', keyHandler);
-    // store handler so it can be removed if overlay removed
     overlay._keyHandler = keyHandler;
-    // move focus to input
+    // focus input
     setTimeout(()=> input.focus(), 10);
   }
 
-  // If unlocked previously, reveal content
-  try {
-    if(localStorage.getItem(UNLOCK_KEY) === '1') { setUnlocked(); }
-    else {
-      hideContent();
-      // ensure overlay is visible and trap focus there
-      trapFocusInOverlay();
-    }
-  } catch(e) {
-    hideContent();
-    trapFocusInOverlay();
+  // initialize: if already unlocked, reveal immediately
+  if(isUnlocked()){
+    revealSite();
+  } else {
+    hideSite();
+    trapFocus();
   }
 
-  // Unlock handler
+  // handlers
   unlockBtn.addEventListener('click', ()=>{
     const val = input.value.trim();
     if(val === CORRECT_PASS){
-      setUnlocked();
+      try { localStorage.setItem(UNLOCK_KEY, '1'); } catch(e){}
+      revealSite();
     } else {
       errorP.textContent = 'Incorrect password — try again.';
       input.value = '';
@@ -154,9 +113,8 @@ function initUnlock(){
   });
   input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') unlockBtn.click(); });
 
-  // Clean up when navigating away (stop intervals)
-  window.addEventListener('beforeunload', ()=> { stopHearts(); });
-
+  // ensure hearts stop on page unload
+  window.addEventListener('beforeunload', stopHearts);
 }
 
 // ---- Timers used on index page ----
@@ -225,12 +183,10 @@ function initLetterPage(){
     if(bgMusic){
       try { bgMusic.volume = parseFloat((volumeSlider && volumeSlider.value) || '0.8'); } catch(e){}
       bgMusic.currentTime = 0;
-      // play in response to user gesture (click) — should be allowed
       bgMusic.play().then(()=> {
         if(playBtn) playBtn.style.display = 'none';
         if(pauseBtn) pauseBtn.style.display = 'inline-block';
       }).catch(()=> {
-        // play blocked or audio missing — show play button so user can attempt manually
         if(playBtn) playBtn.style.display = 'inline-block';
         if(pauseBtn) pauseBtn.style.display = 'none';
       });
@@ -238,10 +194,22 @@ function initLetterPage(){
     if(instructions) instructions.style.display = 'none';
   }
 
-  // Clicking letter reveals message and attempts to play (user gesture)
-  letterFull.addEventListener('click', revealMessageAndPlay);
+  // Wait for site unlock before allowing reveal automatically
+  function onUnlocked(){
+    // once unlocked we keep the letter behavior enabled
+    // Clicking letter reveals message and attempts to play (user gesture)
+    letterFull.addEventListener('click', revealMessageAndPlay);
+    // The page may want to reveal the message automatically on unlock — we leave it to user click to reveal music; but you can auto-reveal if you prefer:
+    // revealMessageAndPlay();
+  }
 
-  // buttons
+  if(isUnlocked()){
+    onUnlocked();
+  } else {
+    document.addEventListener('site-unlocked', onUnlocked, { once: true });
+  }
+
+  // player buttons
   if(playBtn){
     playBtn.addEventListener('click', ()=> {
       if(bgMusic) bgMusic.play().then(()=> {
@@ -270,10 +238,18 @@ function initFlowersPage(){
 
   const MESSAGE = "i hate the distance and im sorry i couldnt bring you flowers mi vida i promise you ill make it up to you one day";
 
-  if(flowerMessage){
-    flowerMessage.textContent = MESSAGE;
-    flowerMessage.setAttribute('aria-hidden', 'false');
-    setTimeout(()=> flowerMessage.classList.add('show'), 60);
+  function revealFlowersPage(){
+    if(flowerMessage){
+      flowerMessage.textContent = MESSAGE;
+      flowerMessage.setAttribute('aria-hidden', 'false');
+      setTimeout(()=> flowerMessage.classList.add('show'), 60);
+    }
+  }
+
+  if(isUnlocked()){
+    revealFlowersPage();
+  } else {
+    document.addEventListener('site-unlocked', revealFlowersPage, { once: true });
   }
 
   // optional: clicking the image opens it in a new tab on small screens
@@ -286,9 +262,8 @@ function initFlowersPage(){
 // Bootstrapping
 // ----------------------
 document.addEventListener('DOMContentLoaded', () => {
-  // init all shared behaviors (each will return early if not relevant)
-  initUnlock();
-  initTimers();
-  initLetterPage();
-  initFlowersPage();
+  initUnlock();       // runs on every page and will reveal if previously unlocked
+  initTimers();       // index timers (returns early on other pages)
+  initLetterPage();   // letter page behavior (waits for unlock)
+  initFlowersPage();  // flowers page behavior (waits for unlock)
 });
