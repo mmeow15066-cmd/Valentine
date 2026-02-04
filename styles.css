@@ -170,7 +170,7 @@ body.locked .flower-only {
   position:fixed;
   inset:0;
   background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45));
-  z-index:9999;
+  z-index:2147483647; /* extremely high so it sits on top on mobile */
   display:flex;
   align-items:center;
   justify-content:center;
@@ -185,7 +185,7 @@ body.locked .flower-only {
   text-align:center;
 }
 .lock-box h1{ margin:0 0 0.6rem; font-family:"Great Vibes",cursive; color:var(--accent); font-size:2rem; }
-.lock-box input{ width:100%; padding:0.6rem 0.75rem; margin-bottom:0.5rem; border-radius:8px; border:1px solid #e3d7db; font-size:1rem; }
+.lock-box input{ width:100%; padding:0.6rem 0.75rem; margin-bottom:0.5rem; border-radius:8px; border:1px solid #e3d7db; font-size:1rem; -webkit-text-size-adjust:100%; }
 .lock-box button{ width:100%; padding:0.6rem; border-radius:8px; border:none; background:var(--accent); color:white; font-weight:600; cursor:pointer; }
 .lock-box .hint{ font-size:0.85rem; color:var(--muted); margin-top:0.5rem;}
 .error{ color:#c82333; margin-top:0.5rem; }
