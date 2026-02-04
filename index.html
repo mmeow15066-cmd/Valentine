@@ -11,10 +11,10 @@
 
 <body class="locked">
   <!-- LOCK OVERLAY (present on every page) -->
-  <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint">
+  <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
-      <input id="password-input" type="password" placeholder="Password" aria-label="Password" autocomplete="off" />
+      <input id="password-input" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
       <button id="unlock-btn" type="button">Unlock</button>
       <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
       <p id="lock-error" class="error" aria-live="polite"></p>
