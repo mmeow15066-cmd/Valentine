@@ -1,5 +1,5 @@
 // Shared behavior across pages
-// Password is client-side for this private surprise: 0410
+// Password remains client-side for this private surprise: 0410
 const UNLOCK_KEY = 'valentine_unlocked';
 const CORRECT_PASS = '0410';
 
@@ -26,7 +26,7 @@ function initUnlock(){
       <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
         <div class="lock-box" role="document">
           <h1 id="lock-title">Enter password</h1>
-          <input id="password-input" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
+          <input id="password-input" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
           <button id="unlock-btn" type="button">Unlock</button>
           <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
           <p id="lock-error" class="error" aria-live="polite"></p>
@@ -42,18 +42,18 @@ function initUnlock(){
   // Ensure overlay is appended to body (on top)
   try { document.body.appendChild(overlay); } catch(e){ /* ignore */ }
 
-  // mobile-friendly: focus input on first touch/click of overlay (fixes iOS focus restrictions)
+  // mobile-friendly: focus input on first touch/click of overlay (fixes some mobile browsers)
   let touchedOnce = false;
-  overlay.addEventListener('touchstart', function onTouch(){
+  function onInitialTouch(){
     if(touchedOnce) return;
     touchedOnce = true;
     try { input.focus(); } catch(e){}
-    // remove early listener after first focus
-    overlay.removeEventListener('touchstart', onTouch);
-  }, { passive: true });
+    overlay.removeEventListener('touchstart', onInitialTouch);
+  }
+  overlay.addEventListener('touchstart', onInitialTouch, { passive: true });
 
   overlay.addEventListener('click', (e)=>{
-    // if user taps the backdrop (not the lock-box), focus input
+    // if user taps outside lock-box (backdrop), focus input
     if(e.target === overlay) {
       try { input.focus(); } catch(e){}
     }
