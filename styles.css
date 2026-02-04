@@ -7,6 +7,7 @@
 
 /* Basic reset */
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0;
   font-family: "Dancing Script", "Segoe UI", Arial, sans-serif;
@@ -165,8 +166,24 @@ body.locked .flower-only {
 .footer{ text-align:center; margin-top:2rem; color:var(--muted); }
 
 /* Locks & hearts (index only) */
-.overlay{ position:fixed; inset:0; background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45)); z-index:400; display:flex; align-items:center; justify-content:center; }
-.lock-box{ background:linear-gradient(180deg,#fff,#fff6f8); border-radius:14px; padding:1.6rem; width:320px; box-shadow:0 16px 48px rgba(0,0,0,0.4); text-align:center; }
+.overlay{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45));
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:auto;
+}
+.lock-box{
+  background:linear-gradient(180deg,#fff,#fff6f8);
+  border-radius:14px;
+  padding:1.6rem;
+  width:320px;
+  box-shadow:0 16px 48px rgba(0,0,0,0.4);
+  text-align:center;
+}
 .lock-box h1{ margin:0 0 0.6rem; font-family:"Great Vibes",cursive; color:var(--accent); font-size:2rem; }
 .lock-box input{ width:100%; padding:0.6rem 0.75rem; margin-bottom:0.5rem; border-radius:8px; border:1px solid #e3d7db; font-size:1rem; }
 .lock-box button{ width:100%; padding:0.6rem; border-radius:8px; border:none; background:var(--accent); color:white; font-weight:600; cursor:pointer; }
