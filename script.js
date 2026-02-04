@@ -1,16 +1,17 @@
 // Shared behavior across pages
-// NOTE: Password is client-side and visible in source (for a private surprise this is OK).
+// NOTE: password is client-side and visible in source (for a private surprise this is expected)
 const UNLOCK_KEY = 'valentine_unlocked';
 const CORRECT_PASS = '0410';
 
-// Utility: check unlocked
+// Utility to check unlocked state
 function isUnlocked(){
   try { return localStorage.getItem(UNLOCK_KEY) === '1'; } catch(e){ return false; }
 }
 
-// ---- Unlock / overlay ----
+/* -------------------------
+   Unlock overlay (present on every page)
+   ------------------------- */
 function initUnlock(){
-  // overlay elements are included on every page
   const overlay = document.getElementById('lock-overlay');
   const input = document.getElementById('password-input');
   const unlockBtn = document.getElementById('unlock-btn');
@@ -45,7 +46,7 @@ function initUnlock(){
     heartsInterval = setInterval(createHeart, 1200);
   }
   function stopHearts(){
-    if(heartsInterval) { clearInterval(heartsInterval); heartsInterval = null; }
+    if(heartsInterval){ clearInterval(heartsInterval); heartsInterval = null; }
   }
 
   function revealSite(){
@@ -56,7 +57,6 @@ function initUnlock(){
       el.style.display = '';
     });
     startHearts();
-    // dispatch event so pages waiting for unlock can act
     document.dispatchEvent(new Event('site-unlocked'));
   }
 
@@ -69,29 +69,27 @@ function initUnlock(){
     stopHearts();
   }
 
-  // Focus trap: simple first/last node trap
+  // Simple focus trap in overlay
   function trapFocus(){
     const focusable = overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     const nodes = Array.prototype.slice.call(focusable);
     if(nodes.length === 0) return;
     const first = nodes[0], last = nodes[nodes.length - 1];
-    function keyHandler(e){
+    function handleKey(e){
       if(e.key === 'Tab'){
         if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
         else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
       } else if(e.key === 'Escape'){
-        // UX: clear any error and input
         input.value = '';
         errorP.textContent = '';
       }
     }
-    overlay.addEventListener('keydown', keyHandler);
-    overlay._keyHandler = keyHandler;
-    // focus input
+    overlay.addEventListener('keydown', handleKey);
+    overlay._keyHandler = handleKey;
     setTimeout(()=> input.focus(), 10);
   }
 
-  // initialize: if already unlocked, reveal immediately
+  // Initialize: reveal immediately if unlocked, otherwise hide and trap focus
   if(isUnlocked()){
     revealSite();
   } else {
@@ -99,7 +97,7 @@ function initUnlock(){
     trapFocus();
   }
 
-  // handlers
+  // Handlers
   unlockBtn.addEventListener('click', ()=>{
     const val = input.value.trim();
     if(val === CORRECT_PASS){
@@ -113,11 +111,13 @@ function initUnlock(){
   });
   input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') unlockBtn.click(); });
 
-  // ensure hearts stop on page unload
+  // Clean up on unload
   window.addEventListener('beforeunload', stopHearts);
 }
 
-// ---- Timers used on index page ----
+/* -------------------------
+   Timers used on index page
+   ------------------------- */
 function initTimers(){
   const startDate = new Date(Date.UTC(2025, 9, 4, 0, 0, 0)); // 04 Oct 2025 UTC
   const sinceEl = document.getElementById('since');
@@ -159,6 +159,7 @@ function initTimers(){
 function initLetterPage(){
   const letterFull = document.getElementById('letter-full');
   const flowerMessage = document.getElementById('flower-message');
+  const inlineFlowers = document.getElementById('inline-flowers');
   const musicControls = document.getElementById('music-controls');
   const bgMusic = document.getElementById('bg-music');
   const playBtn = document.getElementById('play-btn');
@@ -166,20 +167,43 @@ function initLetterPage(){
   const volumeSlider = document.getElementById('volume');
   const instructions = document.getElementById('letter-instructions');
 
-  if(!letterFull) return;
+  if(!letterFull || !flowerMessage) return;
 
   const MESSAGE = "i hate the distance and im sorry i couldnt bring you flowers mi vida i promise you ill make it up to you one day";
 
-  function revealMessageAndPlay(){
-    if(flowerMessage){
-      flowerMessage.textContent = MESSAGE;
-      flowerMessage.setAttribute('aria-hidden', 'false');
-      setTimeout(()=> flowerMessage.classList.add('show'), 40);
+  // Prepare message: set text, blurred state, and attach activation handlers
+  function prepareMessageForReveal(){
+    flowerMessage.textContent = MESSAGE;
+    flowerMessage.classList.remove('opened');
+    flowerMessage.classList.add('blurred');
+    flowerMessage.setAttribute('aria-hidden', 'false');
+    flowerMessage.setAttribute('role', 'button');
+    flowerMessage.setAttribute('tabindex', '0');
+
+    if(inlineFlowers) inlineFlowers.setAttribute('aria-hidden', 'false');
+
+    if(!flowerMessage._activated){
+      const activate = (e) => {
+        if(e.type === 'keydown' && !(e.key === 'Enter' || e.key === ' ')) return;
+        revealMessageAndPlay();
+      };
+      flowerMessage.addEventListener('click', activate);
+      flowerMessage.addEventListener('keydown', activate);
+      flowerMessage._activated = true;
     }
+  }
+
+  function revealMessageAndPlay(){
+    flowerMessage.classList.remove('blurred');
+    flowerMessage.classList.add('opened');
+    flowerMessage.removeAttribute('role');
+
     if(musicControls){
       musicControls.style.display = 'block';
       musicControls.setAttribute('aria-hidden','false');
     }
+    if(instructions) instructions.style.display = 'none';
+
     if(bgMusic){
       try { bgMusic.volume = parseFloat((volumeSlider && volumeSlider.value) || '0.8'); } catch(e){}
       bgMusic.currentTime = 0;
@@ -191,31 +215,15 @@ function initLetterPage(){
         if(pauseBtn) pauseBtn.style.display = 'none';
       });
     }
-    if(instructions) instructions.style.display = 'none';
   }
 
-  // Wait for site unlock before allowing reveal automatically
-  function onUnlocked(){
-    // once unlocked we keep the letter behavior enabled
-    // Clicking letter reveals message and attempts to play (user gesture)
-    letterFull.addEventListener('click', revealMessageAndPlay);
-    // The page may want to reveal the message automatically on unlock — we leave it to user click to reveal music; but you can auto-reveal if you prefer:
-    // revealMessageAndPlay();
-  }
-
-  if(isUnlocked()){
-    onUnlocked();
-  } else {
-    document.addEventListener('site-unlocked', onUnlocked, { once: true });
-  }
-
-  // player buttons
+  // player controls
   if(playBtn){
     playBtn.addEventListener('click', ()=> {
       if(bgMusic) bgMusic.play().then(()=> {
         playBtn.style.display = 'none';
         if(pauseBtn) pauseBtn.style.display = 'inline-block';
-      }).catch(()=>{ /* ignore */});
+      }).catch(()=>{});
     });
   }
   if(pauseBtn){
@@ -226,44 +234,30 @@ function initLetterPage(){
   if(volumeSlider){
     volumeSlider.addEventListener('input', ()=> { if(bgMusic) bgMusic.volume = parseFloat(volumeSlider.value); });
   }
+
+  // If already unlocked, prepare immediately; otherwise wait for unlock event
+  if(isUnlocked()){
+    prepareMessageForReveal();
+  } else {
+    document.addEventListener('site-unlocked', prepareMessageForReveal, { once: true });
+  }
+
+  // Optional: clicking the inline flower opens image in new tab on small screens
+  if(inlineFlowers){
+    const img = document.getElementById('flowers-inline');
+    if(img){
+      img.addEventListener('click', ()=>{
+        if(window.innerWidth < 900 && img.src) window.open(img.src, '_blank');
+      });
+    }
+  }
 }
 
 /* -------------------------
-   Flowers page behavior
+   Bootstrap
    ------------------------- */
-function initFlowersPage(){
-  const flowersFull = document.getElementById('flowers-full');
-  const flowerMessage = document.getElementById('flower-message');
-  if(!flowersFull) return;
-
-  const MESSAGE = "i hate the distance and im sorry i couldnt bring you flowers mi vida i promise you ill make it up to you one day";
-
-  function revealFlowersPage(){
-    if(flowerMessage){
-      flowerMessage.textContent = MESSAGE;
-      flowerMessage.setAttribute('aria-hidden', 'false');
-      setTimeout(()=> flowerMessage.classList.add('show'), 60);
-    }
-  }
-
-  if(isUnlocked()){
-    revealFlowersPage();
-  } else {
-    document.addEventListener('site-unlocked', revealFlowersPage, { once: true });
-  }
-
-  // optional: clicking the image opens it in a new tab on small screens
-  flowersFull.addEventListener('click', ()=>{
-    if(window.innerWidth < 900 && flowersFull.src) window.open(flowersFull.src, '_blank');
-  });
-}
-
-// ----------------------
-// Bootstrapping
-// ----------------------
 document.addEventListener('DOMContentLoaded', () => {
-  initUnlock();       // runs on every page and will reveal if previously unlocked
-  initTimers();       // index timers (returns early on other pages)
-  initLetterPage();   // letter page behavior (waits for unlock)
-  initFlowersPage();  // flowers page behavior (waits for unlock)
+  initUnlock();
+  initTimers();
+  initLetterPage();
 });
