@@ -1,5 +1,5 @@
 // Shared behavior across pages
-// Password remains client-side for this private surprise: 0410
+// Password is client-side for this private surprise: 0410
 const UNLOCK_KEY = 'valentine_unlocked';
 const CORRECT_PASS = '0410';
 
@@ -12,36 +12,52 @@ function isUnlocked(){
    Unlock overlay (present on every page)
    ------------------------- */
 function initUnlock(){
-  const overlay = document.getElementById('lock-overlay');
-  const input = document.getElementById('password-input');
-  const unlockBtn = document.getElementById('unlock-btn');
-  const errorP = document.getElementById('lock-error');
+  // select existing overlay controls
+  let overlay = document.getElementById('lock-overlay');
+  let input = document.getElementById('password-input');
+  let unlockBtn = document.getElementById('unlock-btn');
+  let errorP = document.getElementById('lock-error');
   const body = document.body;
   const heartsContainer = document.getElementById('hearts');
 
-  // If overlay or controls are missing, inject a simple fallback overlay so site is always protected
+  // If missing, inject fallback overlay (guarantees it exists)
   if(!overlay || !input || !unlockBtn){
-    // build fallback overlay and attach to top of body
     const html = `
       <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
         <div class="lock-box" role="document">
           <h1 id="lock-title">Enter password</h1>
-          <input id="password-input" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
+          <input id="password-input" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
           <button id="unlock-btn" type="button">Unlock</button>
           <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
           <p id="lock-error" class="error" aria-live="polite"></p>
         </div>
       </div>`;
     document.body.insertAdjacentHTML('afterbegin', html);
+    overlay = document.getElementById('lock-overlay');
+    input = document.getElementById('password-input');
+    unlockBtn = document.getElementById('unlock-btn');
+    errorP = document.getElementById('lock-error');
   }
 
-  // re-select (now guaranteed)
-  const ov = document.getElementById('lock-overlay');
-  const pwInput = document.getElementById('password-input');
-  const btn = document.getElementById('unlock-btn');
-  const err = document.getElementById('lock-error');
+  // Ensure overlay is appended to body (on top)
+  try { document.body.appendChild(overlay); } catch(e){ /* ignore */ }
 
-  if(!ov || !pwInput || !btn) return;
+  // mobile-friendly: focus input on first touch/click of overlay (fixes iOS focus restrictions)
+  let touchedOnce = false;
+  overlay.addEventListener('touchstart', function onTouch(){
+    if(touchedOnce) return;
+    touchedOnce = true;
+    try { input.focus(); } catch(e){}
+    // remove early listener after first focus
+    overlay.removeEventListener('touchstart', onTouch);
+  }, { passive: true });
+
+  overlay.addEventListener('click', (e)=>{
+    // if user taps the backdrop (not the lock-box), focus input
+    if(e.target === overlay) {
+      try { input.focus(); } catch(e){}
+    }
+  });
 
   // hearts animation
   let heartsInterval = null;
@@ -60,18 +76,14 @@ function initUnlock(){
     heartsContainer.appendChild(h);
     setTimeout(()=> { if(h && h.parentNode) h.parentNode.removeChild(h); }, (dur + delay) * 1000 + 600);
   }
-  function startHearts(){
-    if(heartsInterval) return;
-    for(let i=0;i<8;i++) createHeart();
-    heartsInterval = setInterval(createHeart, 1200);
-  }
+  function startHearts(){ if(heartsInterval) return; for(let i=0;i<8;i++) createHeart(); heartsInterval = setInterval(createHeart, 1200); }
   function stopHearts(){ if(heartsInterval){ clearInterval(heartsInterval); heartsInterval = null; } }
 
-  // reveal/hide helpers
+  // show / hide helpers
   function revealSite(){
     body.classList.remove('locked');
-    ov.style.display = 'none';
-    ov.setAttribute('aria-hidden','true');
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden','true');
     document.querySelectorAll('.cover, .container, .hearts, .letter-only, .flower-only').forEach(el=>{
       el.removeAttribute('aria-hidden');
       el.style.display = '';
@@ -81,39 +93,39 @@ function initUnlock(){
   }
   function hideSite(){
     body.classList.add('locked');
-    ov.style.display = '';
-    ov.setAttribute('aria-hidden','false');
+    overlay.style.display = '';
+    overlay.setAttribute('aria-hidden','false');
     document.querySelectorAll('.cover, .container, .hearts, .letter-only, .flower-only').forEach(el=>{
       el.setAttribute('aria-hidden','true');
     });
     stopHearts();
   }
 
-  // Focus trap (simple)
+  // Focus trap (safe/simple)
   function trapFocus(){
-    const focusable = ov.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const focusable = overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     const nodes = Array.prototype.slice.call(focusable);
-    if(nodes.length === 0) return;
+    if(nodes.length === 0) {
+      // try to focus input directly after a small delay
+      setTimeout(()=> { try { input.focus(); } catch(e){} }, 50);
+      return;
+    }
     const first = nodes[0], last = nodes[nodes.length - 1];
     function onKey(e){
       if(e.key === 'Tab'){
         if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
         else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
       } else if(e.key === 'Escape'){
-        pwInput.value = '';
-        err.textContent = '';
+        input.value = '';
+        if(errorP) errorP.textContent = '';
       }
     }
-    ov.addEventListener('keydown', onKey);
-    setTimeout(()=> {
-      // focus input (works on desktop & mobile)
-      try { pwInput.focus(); } catch(e){}
-      // On some mobile browsers focus may need a small delay
-      setTimeout(()=> { try { pwInput.focus(); } catch(e){} }, 50);
-    }, 10);
+    overlay.addEventListener('keydown', onKey);
+    // focus input (delayed works better on iOS)
+    setTimeout(()=> { try { input.focus(); } catch(e){} }, 50);
   }
 
-  // Initialize: reveal immediately if previously unlocked, otherwise hide and trap focus
+  // Initialize
   if(isUnlocked()){
     revealSite();
   } else {
@@ -122,22 +134,22 @@ function initUnlock(){
   }
 
   // unlock handler
-  btn.addEventListener('click', ()=>{
-    const val = (pwInput.value || '').trim();
+  unlockBtn.addEventListener('click', ()=>{
+    const val = (input.value || '').trim();
     if(val === CORRECT_PASS){
       try { localStorage.setItem(UNLOCK_KEY, '1'); } catch(e){}
       revealSite();
     } else {
-      err.textContent = 'Incorrect password — try again.';
-      pwInput.value = '';
-      try { pwInput.focus(); } catch(e){}
+      if(errorP) errorP.textContent = 'Incorrect password — try again.';
+      input.value = '';
+      try { input.focus(); } catch(e){}
     }
   });
 
   // Enter key
-  pwInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ btn.click(); e.preventDefault(); } });
+  input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ unlockBtn.click(); e.preventDefault(); } });
 
-  // stop hearts on unload
+  // cleanup
   window.addEventListener('beforeunload', stopHearts);
 }
 
@@ -210,7 +222,6 @@ function initLetterPage(){
       letterFull.addEventListener('click', activate);
       letterFull.addEventListener('keydown', activate);
       letterFull._listenerAdded = true;
-      // ensure letter image focusable
       letterFull.setAttribute('tabindex','0');
       letterFull.setAttribute('role','button');
     }
