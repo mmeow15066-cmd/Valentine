@@ -89,7 +89,7 @@ function initUnlock(){
     setTimeout(()=> input.focus(), 10);
   }
 
-  // Initialize: reveal immediately if unlocked, otherwise hide and trap focus
+  // Initialize: reveal if unlocked, otherwise hide and trap focus
   if(isUnlocked()){
     revealSite();
   } else {
@@ -99,7 +99,7 @@ function initUnlock(){
 
   // Handlers
   unlockBtn.addEventListener('click', ()=>{
-    const val = input.value.trim();
+    const val = (input.value || '').trim();
     if(val === CORRECT_PASS){
       try { localStorage.setItem(UNLOCK_KEY, '1'); } catch(e){}
       revealSite();
@@ -154,7 +154,7 @@ function initTimers(){
 }
 
 /* -------------------------
-   Letter page behavior
+   Letter page behavior (image blurred -> reveal message & play)
    ------------------------- */
 function initLetterPage(){
   const letterFull = document.getElementById('letter-full');
@@ -171,39 +171,44 @@ function initLetterPage(){
 
   const MESSAGE = "i hate the distance and im sorry i couldnt bring you flowers mi vida i promise you ill make it up to you one day";
 
-  // Prepare message: set text, blurred state, and attach activation handlers
-  function prepareMessageForReveal(){
+  // Prepare: set message text but keep hidden until reveal
+  function prepareForReveal(){
     flowerMessage.textContent = MESSAGE;
-    flowerMessage.classList.remove('opened');
-    flowerMessage.classList.add('blurred');
-    flowerMessage.setAttribute('aria-hidden', 'false');
-    flowerMessage.setAttribute('role', 'button');
-    flowerMessage.setAttribute('tabindex', '0');
+    flowerMessage.setAttribute('aria-hidden','true');
+    flowerMessage.classList.remove('show');
 
-    if(inlineFlowers) inlineFlowers.setAttribute('aria-hidden', 'false');
+    if(inlineFlowers) inlineFlowers.setAttribute('aria-hidden','false');
 
-    if(!flowerMessage._activated){
+    // attach activation handlers to the letter image (only once)
+    if(!letterFull._listenerAdded){
       const activate = (e) => {
         if(e.type === 'keydown' && !(e.key === 'Enter' || e.key === ' ')) return;
         revealMessageAndPlay();
       };
-      flowerMessage.addEventListener('click', activate);
-      flowerMessage.addEventListener('keydown', activate);
-      flowerMessage._activated = true;
+      letterFull.addEventListener('click', activate);
+      letterFull.addEventListener('keydown', activate);
+      letterFull._listenerAdded = true;
     }
   }
 
   function revealMessageAndPlay(){
-    flowerMessage.classList.remove('blurred');
-    flowerMessage.classList.add('opened');
-    flowerMessage.removeAttribute('role');
+    // remove blur on image
+    letterFull.classList.remove('blurred-img');
+    letterFull.classList.add('revealed-img');
+    letterFull.removeAttribute('role');
 
+    // reveal message text
+    flowerMessage.setAttribute('aria-hidden','false');
+    flowerMessage.classList.add('show');
+
+    // show music controls
     if(musicControls){
       musicControls.style.display = 'block';
       musicControls.setAttribute('aria-hidden','false');
     }
     if(instructions) instructions.style.display = 'none';
 
+    // play music (user gesture)
     if(bgMusic){
       try { bgMusic.volume = parseFloat((volumeSlider && volumeSlider.value) || '0.8'); } catch(e){}
       bgMusic.currentTime = 0;
@@ -235,14 +240,13 @@ function initLetterPage(){
     volumeSlider.addEventListener('input', ()=> { if(bgMusic) bgMusic.volume = parseFloat(volumeSlider.value); });
   }
 
-  // If already unlocked, prepare immediately; otherwise wait for unlock event
   if(isUnlocked()){
-    prepareMessageForReveal();
+    prepareForReveal();
   } else {
-    document.addEventListener('site-unlocked', prepareMessageForReveal, { once: true });
+    document.addEventListener('site-unlocked', prepareForReveal, { once: true });
   }
 
-  // Optional: clicking the inline flower opens image in new tab on small screens
+  // inline flower click behavior (small screens)
   if(inlineFlowers){
     const img = document.getElementById('flowers-inline');
     if(img){
