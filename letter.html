@@ -24,12 +24,13 @@
     <a class="back-link" href="index.html">← Back</a>
 
     <div class="letter-wrap">
-      <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" />
+      <!-- Love letter image starts blurred and is keyboard focusable -->
+      <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" class="blurred-img" tabindex="0" role="button" aria-label="Click to reveal the message and play music" />
 
-      <p id="letter-instructions" class="muted small">Click the message below to reveal it and play the music.</p>
+      <p id="letter-instructions" class="muted small">Click the letter image below to reveal the message and play the music.</p>
 
-      <!-- hidden message revealed on click; starts blurred and clickable -->
-      <p id="flower-message" class="flower-message blurred" role="status" aria-live="polite" aria-hidden="true" tabindex="0"></p>
+      <!-- message is hidden until the letter is clicked -->
+      <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true"></p>
 
       <!-- inline flowers placed under the message (not part of the message) -->
       <figure id="inline-flowers" class="flower-figure inline" aria-hidden="true">
