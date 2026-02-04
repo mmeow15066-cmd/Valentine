@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="locked letter-page">
-  <!-- LOCK OVERLAY (same one as index) -->
+  <!-- LOCK OVERLAY -->
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
@@ -25,10 +25,17 @@
 
     <div class="letter-wrap">
       <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" />
-      <p id="letter-instructions" class="muted small">Click the letter to reveal a message and play the music.</p>
 
-      <!-- hidden message revealed on click (or after unlock) -->
-      <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true"></p>
+      <p id="letter-instructions" class="muted small">Click the message below to reveal it and play the music.</p>
+
+      <!-- hidden message revealed on click; starts blurred and clickable -->
+      <p id="flower-message" class="flower-message blurred" role="status" aria-live="polite" aria-hidden="true" tabindex="0"></p>
+
+      <!-- inline flowers placed under the message (not part of the message) -->
+      <figure id="inline-flowers" class="flower-figure inline" aria-hidden="true">
+        <img id="flowers-inline" src="lilies.JPG" alt="Bouquet of lilies" />
+        <figcaption class="muted small">A bouquet of lilies — for you.</figcaption>
+      </figure>
 
       <div id="music-controls" class="music-controls" aria-hidden="true" style="display:none">
         <div style="display:flex;gap:.5rem;align-items:center;">
@@ -39,7 +46,7 @@
         </div>
       </div>
 
-      <p style="margin-top:18px"><a class="btn" href="flowers.html">View the flowers</a></p>
+      <p style="margin-top:18px"><a class="btn" href="index.html">Back to home</a></p>
     </div>
   </main>
 
