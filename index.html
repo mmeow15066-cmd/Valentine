@@ -6,10 +6,10 @@
   <title>Happy Valentine's Day — Mi Vida</title>
   <meta name="description" content="A small Valentine's surprise — memories, a letter and flowers.">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- LOCK OVERLAY (always present) -->
+  <!-- LOCK OVERLAY (always on top; does not remove underlying DOM) -->
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
@@ -23,18 +23,18 @@
 
   <div id="hearts" class="hearts" aria-hidden="true"></div>
 
-  <header class="cover" aria-hidden="true">
-    <img src="cover.JPG" alt="Soft background of flowers" class="cover-img">
+  <header class="cover">
+    <img src="cover.JPG" alt="Soft background of flowers" class="cover-img" />
     <h1 class="cover-title">Happy Valentine's Day<br><span class="sub">mi vida</span></h1>
   </header>
 
-  <main class="container" aria-hidden="true">
+  <main class="container">
     <section class="intro">
       <h2>Te amo mi angel</h2>
       <p class="lead">This little page is for you — a surprise full of memories.</p>
     </section>
 
-    <section id="timers" class="timers" aria-hidden="true">
+    <section id="timers" class="timers">
       <div class="time-card">
         <h3>Time together</h3>
         <p id="since">Calculating...</p>
@@ -45,7 +45,7 @@
       </div>
     </section>
 
-    <section id="gallery" class="gallery-section" aria-hidden="true">
+    <section id="gallery" class="gallery-section">
       <h2>Us</h2>
       <div class="polaroids" role="list">
         <figure class="polaroid" role="listitem"><img src="polaroid1.JPG" alt="Us at the beach" loading="lazy"><figcaption>Us</figcaption></figure>
@@ -59,12 +59,12 @@
       </div>
     </section>
 
-    <section id="letter" class="letter-section" aria-hidden="true">
+    <section id="letter" class="letter-section">
       <h2>My Love Letter</h2>
       <div class="letter">
-        <!-- Thumbnail is allowed on main page -->
+        <!-- thumbnail only (small) on main page -->
         <a href="letter.html" aria-label="Open the full love letter">
-          <img src="loveletter.JPG" alt="Love Letter (thumbnail)" />
+          <img class="thumbnail" src="loveletter.JPG" alt="Love letter thumbnail" />
         </a>
       </div>
       <div class="letter-actions">
@@ -72,11 +72,11 @@
       </div>
     </section>
 
-    <footer class="footer" aria-hidden="true">
+    <footer class="footer">
       <p>Made with ♥</p>
     </footer>
   </main>
 
-  <script src="script.js?v=5" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
