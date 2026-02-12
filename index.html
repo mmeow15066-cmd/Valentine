@@ -6,19 +6,16 @@
   <title>Happy Valentine's Day — Mi Vida</title>
   <meta name="description" content="A small Valentine's surprise — memories, a letter and flowers.">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <!-- cache-busted stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 
 <body>
-  <!-- LOCK OVERLAY (present on every page) -->
+  <!-- LOCK OVERLAY -->
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
-
-      <!-- Focus helper (mobile) -->
       <button id="focus-helper" class="focus-helper" type="button" aria-hidden="true">Tap here to enter the password</button>
-
-      <!-- Masked numeric hint -->
       <input id="password-input" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
       <button id="unlock-btn" type="button">Unlock</button>
       <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
@@ -81,6 +78,7 @@
     </footer>
   </main>
 
-  <script src="script.js" defer></script>
+  <!-- cache-busted script -->
+  <script src="script.js?v=4" defer></script>
 </body>
 </html>
