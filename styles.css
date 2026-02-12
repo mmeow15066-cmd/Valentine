@@ -7,6 +7,7 @@
 
 /* Basic reset */
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0;
   font-family: "Dancing Script", "Segoe UI", Arial, sans-serif;
@@ -14,18 +15,6 @@ body{
   color:var(--text);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
-}
-
-/* Hide underlying content while locked */
-body.locked {
-  overflow: hidden;
-}
-body.locked .cover,
-body.locked .container,
-body.locked .hearts,
-body.locked .letter-only,
-body.locked .flower-only {
-  display: none !important;
 }
 
 /* Shared button/link */
@@ -40,152 +29,59 @@ body.locked .flower-only {
   cursor:pointer;
 }
 
-/* Back link */
-.back-link{
-  display:inline-block;
-  margin:10px 0;
+/* Focus helper (visible on overlay; helps mobile) */
+.focus-helper{
+  display:block;
+  width:100%;
+  margin-bottom:8px;
+  padding:0.5rem;
+  border-radius:8px;
+  border:1px dashed rgba(0,0,0,0.06);
+  background:linear-gradient(180deg,#fff,#fffafc);
   color:var(--muted);
-  text-decoration:none;
+  font-size:0.95rem;
+  cursor:pointer;
 }
 
-/* Layout container */
-.container{
-  max-width:980px;
-  margin:1.5rem auto;
-  padding:0 1rem 3rem;
-}
+/* Basic layout (rest kept minimal for brevity) */
+.container{ max-width:980px; margin:1.5rem auto; padding:0 1rem 3rem; }
+.cover-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.08; pointer-events:none; }
+.letter-wrap{ max-width:720px; margin:0 auto; text-align:center; }
+.letter-wrap img{ width:100%; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,0.15); cursor:pointer; }
 
-/* Cover */
-.cover{
-  position:relative;
+/* Locks & hearts (index only) */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45));
+  z-index:2147483647;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:3rem 1rem;
+  pointer-events:auto;
+}
+.lock-box{
+  background:linear-gradient(180deg,#fff,#fff6f8);
+  border-radius:14px;
+  padding:1.6rem;
+  width:320px;
+  box-shadow:0 16px 48px rgba(0,0,0,0.4);
   text-align:center;
-  background:transparent;
 }
-.cover-img{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0.08;
-  pointer-events:none;
-}
-.cover-title{
-  font-family:"Great Vibes", "Dancing Script", cursive;
-  font-size:3.2rem;
-  color:var(--accent);
-  margin:0;
-  z-index:1;
-}
-.cover-title .sub{ display:block; font-size:1.2rem; color:#8b2b3a; }
-
-/* Intro */
-.intro h2{ font-family:"Great Vibes", cursive; color:var(--accent); font-size:2.2rem; margin-bottom:0.25rem; }
-.lead{ color:var(--muted); margin-top:0; margin-bottom:1rem; }
-
-/* Timers */
-.timers{ display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem; }
-.time-card{ flex:1 1 240px; background:rgba(255,255,255,0.8); border-radius:10px; padding:1rem; box-shadow:0 6px 18px rgba(0,0,0,0.08); text-align:center; }
-.time-card h3{ margin:0; color:var(--accent); font-family:"Great Vibes", cursive; }
-.time-card p{ font-size:1.05rem; margin:0.5rem 0 0; }
-
-/* Polaroids */
-.gallery-section h2{ font-family:"Great Vibes", cursive; color:var(--accent); font-size:1.9rem; margin-bottom:0.8rem; }
-.polaroids{ display:flex; gap:1rem; flex-wrap:wrap; }
-.polaroid{ width:calc(50% - 0.5rem); max-width:260px; background:#fff; padding:12px 12px 20px; border-radius:6px; transform:rotate(-2deg); box-shadow: 0 8px 22px rgba(0,0,0,0.12); text-align:center; margin-bottom:1rem; }
-.polaroid:nth-child(2){ transform: rotate(4deg); } .polaroid:nth-child(3){ transform: rotate(-6deg); } .polaroid:nth-child(4){ transform: rotate(3deg); }
-.polaroid:nth-child(5){ transform: rotate(-3deg); } .polaroid:nth-child(6){ transform: rotate(5deg); } .polaroid:nth-child(7){ transform: rotate(-4deg); } .polaroid:nth-child(8){ transform: rotate(2deg); }
-.polaroid img{ width:100%; height:200px; object-fit:cover; border-radius:4px; }
-.polaroid figcaption{ margin-top:8px; font-family:"Dancing Script", cursive; color:var(--muted); }
-
-/* Letter thumbnail */
-.letter img{ width:100%; max-width:720px; display:block; margin:0 auto; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.12); cursor:pointer; }
-
-/* Letter-only page */
-.letter-only{ display:flex; flex-direction:column; align-items:center; gap:10px; padding:2rem 1rem; }
-.letter-wrap{ max-width:720px; width:100%; text-align:center; }
-.letter-wrap img{ width:100%; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,0.15); cursor:pointer; }
-.small{ font-size:0.9rem; }
-.muted{ color:var(--muted); }
-
-/* Flower-only page */
-.flower-only{ display:flex; flex-direction:column; align-items:center; gap:10px; padding:2rem 1rem; }
-.flower-figure{ width:100%; max-width:980px; margin:0 auto; text-align:center; }
-.flower-figure img{ width:100%; border-radius:12px; box-shadow:0 20px 80px rgba(0,0,0,0.3); }
-
-/* Music controls and message */
-.music-controls{ width:100%; background:linear-gradient(180deg,#fff,#fff6f8); border-radius:8px; padding:10px; box-shadow:0 8px 20px rgba(0,0,0,0.08); display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:10px; }
-
-/* Love letter image blurred state */
-.blurred-img{
-  filter: blur(6px);
-  transition: filter 420ms cubic-bezier(.2,.9,.3,1), transform 220ms;
-  cursor: pointer;
-  display:block;
-  margin: 0 auto;
-  border-radius:8px;
-  box-shadow:0 12px 40px rgba(0,0,0,0.15);
-  outline: none;
-}
-.blurred-img:focus{
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15), 0 0 0 4px rgba(214,69,91,0.12);
-}
-.revealed-img{
-  filter: none;
-  cursor: default;
-}
-
-/* Message (initially hidden) */
-.flower-message{
-  margin-top:10px;
-  font-family:"Dancing Script", cursive;
-  font-size:1.05rem;
-  color:var(--accent);
-  text-align:center;
-  max-width:100%;
-  line-height:1.3;
-  opacity:0;
-  transform: translateY(6px);
-  transition: opacity 360ms, transform 360ms;
-}
-.flower-message.show{
-  opacity:1;
-  transform: translateY(0);
-}
-
-/* Inline flowers */
-.flower-figure.inline { margin-top: 16px; width:100%; max-width:680px; margin-left:auto; margin-right:auto; text-align:center; }
-.flower-figure.inline img{ width:100%; border-radius:12px; box-shadow:0 20px 80px rgba(0,0,0,0.25); cursor:zoom-in; }
-
-/* Footer */
-.footer{ text-align:center; margin-top:2rem; color:var(--muted); }
-
-/* Locks & hearts (index only) */
-.overlay{ position:fixed; inset:0; background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45)); z-index:400; display:flex; align-items:center; justify-content:center; }
-.lock-box{ background:linear-gradient(180deg,#fff,#fff6f8); border-radius:14px; padding:1.6rem; width:320px; box-shadow:0 16px 48px rgba(0,0,0,0.4); text-align:center; }
-.lock-box h1{ margin:0 0 0.6rem; font-family:"Great Vibes",cursive; color:var(--accent); font-size:2rem; }
-.lock-box input{ width:100%; padding:0.6rem 0.75rem; margin-bottom:0.5rem; border-radius:8px; border:1px solid #e3d7db; font-size:1rem; }
+.lock-box input{ width:100%; padding:0.6rem 0.75rem; margin-bottom:0.5rem; border-radius:8px; border:1px solid #e3d7db; font-size:1rem; -webkit-text-size-adjust:100%; }
 .lock-box button{ width:100%; padding:0.6rem; border-radius:8px; border:none; background:var(--accent); color:white; font-weight:600; cursor:pointer; }
 .lock-box .hint{ font-size:0.85rem; color:var(--muted); margin-top:0.5rem;}
 .error{ color:#c82333; margin-top:0.5rem; }
-.hearts{ pointer-events:none; position:fixed; left:0; right:0; bottom:0; top:0; z-index:300; overflow:hidden; }
-.heart{ position:absolute; font-size:20px; color:var(--accent); opacity:0; transform:translateY(0) scale(0.9); animation: floatUp linear forwards; text-shadow:0 1px 0 rgba(255,255,255,0.2); }
-@keyframes floatUp { 0% { opacity:0; transform: translateY(0) scale(0.9);} 10% { opacity:1; transform: translateY(-20px) scale(1);} 100% { opacity:0; transform: translateY(-420px) scale(1.2);} }
 
-/* Responsive small screens */
+/* Blurred image style */
+.blurred-img{ filter: blur(6px); transition: filter 420ms cubic-bezier(.2,.9,.3,1), transform 220ms; cursor: pointer; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,0.15); }
+.revealed-img{ filter:none; cursor:default; }
+
+/* Message hidden until reveal */
+.flower-message{ display:none; margin-top:10px; font-family:"Dancing Script", cursive; font-size:1.05rem; color:var(--accent); text-align:center; max-width:100%; line-height:1.3; }
+.flower-message.show{ display:block; }
+
+/* small screens */
 @media (max-width:700px){
-  .polaroid{ width:100%; }
-  .cover-title{ font-size:2.2rem; }
-  .flower-figure img, .letter-wrap img{ max-height:60vh; object-fit:cover; }
-  .flower-message{
-    margin-top:14px;
-    font-size:1.05rem;
-    line-height:1.4;
-    padding:0 12px;
-  }
-  .flower-figure.inline img{ max-height:44vh; object-fit:cover; }
+  .letter-wrap img{ max-height:60vh; object-fit:cover; }
 }
