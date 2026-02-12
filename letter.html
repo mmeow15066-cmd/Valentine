@@ -8,12 +8,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="locked letter-page">
-  <!-- LOCK OVERLAY -->
-  <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint">
+<body>
+  <!-- LOCK OVERLAY (always present) -->
+  <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
-      <input id="password-input" type="password" placeholder="Password" aria-label="Password" autocomplete="off" />
+      <button id="focus-helper" class="focus-helper" type="button" aria-hidden="true">Tap here to enter the password</button>
+      <input id="password-input" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
       <button id="unlock-btn" type="button">Unlock</button>
       <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
       <p id="lock-error" class="error" aria-live="polite"></p>
@@ -24,13 +25,16 @@
     <a class="back-link" href="index.html">← Back</a>
 
     <div class="letter-wrap">
-      <!-- Love letter image starts blurred and is keyboard focusable -->
-      <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" class="blurred-img" tabindex="0" role="button" aria-label="Click to reveal the message and play music" />
+      <!-- The Open Letter button appears after unlock; the large letter image remains hidden until the user clicks Open Letter -->
+      <button id="open-letter-btn" class="btn" style="display:none">Open Letter</button>
+
+      <!-- big letter is hidden by default (display:none) -->
+      <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" class="blurred-img" tabindex="0" role="button" aria-label="Click to reveal the message and play music" style="display:none" />
 
       <p id="letter-instructions" class="muted small">Click the letter image below to reveal the message and play the music.</p>
 
-      <!-- message is hidden until the letter is clicked -->
-      <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true"></p>
+      <!-- message remains hidden until the letter image is clicked -->
+      <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true" style="display:none"></p>
 
       <!-- inline flowers placed under the message (not part of the message) -->
       <figure id="inline-flowers" class="flower-figure inline" aria-hidden="true">
