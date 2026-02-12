@@ -26,7 +26,6 @@ function initUnlock(){
   function revealSite(){
     overlay.style.display = 'none';
     overlay.setAttribute('aria-hidden','true');
-    // show open-letter button in case we're on letter page
     const openBtn = document.getElementById('open-letter-btn');
     if(openBtn) openBtn.style.display = '';
     document.dispatchEvent(new Event('site-unlocked'));
@@ -140,7 +139,6 @@ function initLetterPage(){
     }
   }
 
-  // show open button when unlocked
   if(safeLocalGet()){ openBtn.style.display = ''; }
   else document.addEventListener('site-unlocked', ()=>{ openBtn.style.display = ''; }, { once:true });
 
