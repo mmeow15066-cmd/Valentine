@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- LOCK OVERLAY (always on top; does not remove underlying DOM) -->
+  <!-- LOCK OVERLAY (always present) -->
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
@@ -62,7 +62,6 @@
     <section id="letter" class="letter-section">
       <h2>My Love Letter</h2>
       <div class="letter">
-        <!-- thumbnail only (small) on main page -->
         <a href="letter.html" aria-label="Open the full love letter">
           <img class="thumbnail" src="loveletter.JPG" alt="Love letter thumbnail" />
         </a>
