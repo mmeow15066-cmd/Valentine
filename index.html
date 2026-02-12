@@ -6,12 +6,10 @@
   <title>Happy Valentine's Day — Mi Vida</title>
   <meta name="description" content="A small Valentine's surprise — memories, a letter and flowers.">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-  <!-- cache-busted stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
-
 <body>
-  <!-- LOCK OVERLAY -->
+  <!-- LOCK OVERLAY (always present) -->
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
@@ -64,6 +62,7 @@
     <section id="letter" class="letter-section" aria-hidden="true">
       <h2>My Love Letter</h2>
       <div class="letter">
+        <!-- Thumbnail is allowed on main page -->
         <a href="letter.html" aria-label="Open the full love letter">
           <img src="loveletter.JPG" alt="Love Letter (thumbnail)" />
         </a>
@@ -78,7 +77,6 @@
     </footer>
   </main>
 
-  <!-- cache-busted script -->
-  <script src="script.js?v=4" defer></script>
+  <script src="script.js?v=5" defer></script>
 </body>
 </html>
