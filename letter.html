@@ -4,12 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Love Letter — Mi Vida</title>
-  <meta name="description" content="A personal love letter with music.">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Lock overlay (present on every page) -->
+  <!-- LOCK OVERLAY -->
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
@@ -21,28 +20,28 @@
     </div>
   </div>
 
-  <main class="letter-only container" aria-hidden="true">
+  <main class="letter-only container">
     <a class="back-link" href="index.html">← Back</a>
 
     <div class="letter-wrap">
-      <!-- Open Letter button appears after unlock -->
+      <!-- Open Letter button (hidden until unlock) -->
       <button id="open-letter-btn" class="btn" style="display:none">Open Letter</button>
 
-      <!-- Big letter image initially hidden until Open Letter is clicked -->
-      <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" class="blurred-img" tabindex="0" role="button" aria-label="Click to reveal the message and play music" style="display:none" />
+      <!-- Full letter (hidden until open-letter clicked) -->
+      <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" class="blurred-img" style="display:none" tabindex="0" role="button" aria-label="Click to reveal the message and play music" />
 
       <p id="letter-instructions" class="muted small">Click the letter image below to reveal the message and play the music.</p>
 
-      <!-- Hidden message (revealed by clicking the full letter) -->
-      <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true" style="display:none"></p>
+      <!-- message hidden until reveal -->
+      <p id="flower-message" class="flower-message" style="display:none" aria-live="polite" aria-hidden="true"></p>
 
-      <!-- Inline flowers (separate element) -->
+      <!-- flowers (inline) -->
       <figure id="inline-flowers" class="flower-figure inline" aria-hidden="true">
         <img id="flowers-inline" src="lilies.JPG" alt="Bouquet of lilies" />
         <figcaption class="muted small">A bouquet of lilies — for you.</figcaption>
       </figure>
 
-      <div id="music-controls" class="music-controls" aria-hidden="true" style="display:none">
+      <div id="music-controls" class="music-controls" style="display:none" aria-hidden="true">
         <div style="display:flex;gap:.5rem;align-items:center;">
           <button id="play-btn" type="button">Play</button>
           <button id="pause-btn" type="button" style="display:none">Pause</button>
@@ -56,6 +55,6 @@
   </main>
 
   <audio id="bg-music" src="music.mp3" preload="auto"></audio>
-  <script src="script.js?v=5" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
