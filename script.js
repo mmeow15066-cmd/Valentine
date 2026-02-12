@@ -1,6 +1,4 @@
-// script.js v4 — cache-busted in HTML
-// Password is client-side for this private surprise: 0410
-
+// script.js v5 — lock + timers + letter behavior
 const UNLOCK_KEY = 'valentine_unlocked';
 const CORRECT_PASS = '0410';
 
@@ -42,7 +40,8 @@ function ensureOverlay(){
 }
 
 function revealSite(){
-  const overlay = document.getElementById('lock-overlay'); if(overlay){ overlay.style.display='none'; overlay.setAttribute('aria-hidden','true'); }
+  const overlay = document.getElementById('lock-overlay');
+  if(overlay){ overlay.style.display='none'; overlay.setAttribute('aria-hidden','true'); }
   revealAllContent();
   document.dispatchEvent(new Event('site-unlocked'));
 }
@@ -72,11 +71,45 @@ function initUnlock(){
     if(v === CORRECT_PASS){ safeLocalSet(); revealSite(); }
     else { if(err) err.textContent = 'Incorrect password — try again.'; input.value=''; try{ input.focus(); }catch(e){} }
   });
-
-  input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ unlockBtn.click(); e.preventDefault(); } });
+  input.addEventListener('keydown',(e)=>{ if(e.key === 'Enter'){ unlockBtn.click(); e.preventDefault(); } });
 
   if(safeLocalGet()) revealSite();
-  else { hideSite(); setTimeout(()=>{ try{ input.focus(); }catch(e){} }, 60); }
+  else { hideSite(); setTimeout(()=>{ try{ input.focus(); }catch(e){} },60); }
+}
+
+function initTimers(){
+  const sinceEl = document.getElementById('since');
+  const countdownEl = document.getElementById('countdown');
+  if(!sinceEl && !countdownEl) return;
+
+  // Adjust this date to your real relationship start (year, monthIndex, day)
+  const startDate = new Date(Date.UTC(2025, 9, 4, 0, 0, 0)); // 4 Oct 2025 UTC
+
+  function pad(n){ return n.toString().padStart(2,'0'); }
+
+  function update(){
+    const now = new Date();
+    let diffMs = now - startDate;
+    if(diffMs < 0) diffMs = 0;
+    const days = Math.floor(diffMs / (1000*60*60*24));
+    const hours = Math.floor((diffMs % (1000*60*60*24)) / (1000*60*60));
+    const minutes = Math.floor((diffMs % (1000*60*60)) / (1000*60));
+    const seconds = Math.floor((diffMs % (1000*60)) / 1000);
+    if(sinceEl) sinceEl.textContent = `${days} days ${pad(hours)}:${pad(minutes)}:${pad(seconds)} since 04 Oct 2025`;
+
+    const year = now.getFullYear();
+    let nextAnn = new Date(year, 9, 4, 0, 0, 0);
+    if(nextAnn <= now) nextAnn = new Date(year+1, 9, 4, 0, 0, 0);
+    let rem = nextAnn - now; if(rem < 0) rem = 0;
+    const rd = Math.floor(rem / (1000*60*60*24));
+    const rh = Math.floor((rem % (1000*60*60*24)) / (1000*60*60));
+    const rm = Math.floor((rem % (1000*60*60)) / (1000*60));
+    const rs = Math.floor((rem % (1000*60)) / 1000);
+    if(countdownEl) countdownEl.textContent = `${rd} days ${pad(rh)}:${pad(rm)}:${pad(rs)} until ${nextAnn.toLocaleDateString()}`;
+  }
+
+  update();
+  setInterval(update, 1000);
 }
 
 function initLetter(){
@@ -96,33 +129,34 @@ function initLetter(){
 
   openBtn.addEventListener('click', ()=>{
     letterFull.style.display=''; openBtn.style.display='none';
-    if(!letterFull._attached){ const act = (e)=>{ if(e.type==='keydown' && !(e.key==='Enter' || e.key===' ')) return; reveal(); }; letterFull.addEventListener('click', act); letterFull.addEventListener('keydown', act); letterFull._attached=true; letterFull.setAttribute('tabindex','0'); letterFull.setAttribute('role','button'); }
+    if(!letterFull._attached){ const act=(e)=>{ if(e.type==='keydown' && !(e.key==='Enter'||e.key===' ')) return; reveal(); }; letterFull.addEventListener('click', act); letterFull.addEventListener('keydown', act); letterFull._attached=true; letterFull.setAttribute('tabindex','0'); letterFull.setAttribute('role','button'); }
   });
 
   function reveal(){
     letterFull.classList.remove('blurred-img'); letterFull.classList.add('revealed-img'); letterFull.removeAttribute('role');
-    flowerMessage.style.display=''; flowerMessage.setAttribute('aria-hidden','false'); flowerMessage.classList.add('show');
+    flowerMessage.style.display=''; flowerMessage.setAttribute('aria-hidden','false');
     if(musicControls){ musicControls.style.display='block'; musicControls.setAttribute('aria-hidden','false'); }
     if(instructions) instructions.style.display='none';
-    if(bgMusic){ try{ bgMusic.volume = parseFloat((volume && volume.value) || '0.8'); }catch(e){} bgMusic.currentTime = 0; bgMusic.play().catch(()=>{}); }
+    if(bgMusic){ try{ bgMusic.volume = parseFloat((volume && volume.value) || '0.8'); }catch(e){} bgMusic.currentTime=0; bgMusic.play().catch(()=>{}); }
   }
 
-  if(playBtn) playBtn.addEventListener('click', ()=>{ if(bgMusic) bgMusic.play(); if(playBtn) playBtn.style.display='none'; if(pauseBtn) pauseBtn.style.display='inline-block'; });
-  if(pauseBtn) pauseBtn.addEventListener('click', ()=>{ if(bgMusic){ bgMusic.pause(); pauseBtn.style.display='none'; if(playBtn) playBtn.style.display='inline-block'; }});
+  if(playBtn) playBtn.addEventListener('click', ()=>{ if(bgMusic) bgMusic.play(); playBtn.style.display='none'; if(pauseBtn) pauseBtn.style.display='inline-block'; });
+  if(pauseBtn) pauseBtn.addEventListener('click', ()=>{ if(bgMusic){ bgMusic.pause(); pauseBtn.style.display='none'; if(playBtn) playBtn.style.display='inline-block'; } });
   if(volume) volume.addEventListener('input', ()=>{ if(bgMusic) bgMusic.volume = parseFloat(volume.value); });
 
-  if(safeLocalGet()){ const ob = document.getElementById('open-letter-btn'); if(ob) ob.style.display=''; }
-  else document.addEventListener('site-unlocked', ()=>{ const ob = document.getElementById('open-letter-btn'); if(ob) ob.style.display=''; }, { once:true });
+  if(safeLocalGet()){ const ob=document.getElementById('open-letter-btn'); if(ob) ob.style.display=''; }
+  else document.addEventListener('site-unlocked', ()=>{ const ob=document.getElementById('open-letter-btn'); if(ob) ob.style.display=''; }, { once:true });
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
   try{
     initUnlock();
-    hideAllContent(); // keep everything hidden until unlock/reveal
+    hideAllContent();
+    initTimers();
     initLetter();
   }catch(e){
-    console.error('init error', e);
-    // fallback: reveal so page not blank
+    console.error('bootstrap error', e);
+    // fallback: reveal content so page is not blank
     document.querySelectorAll('.cover, .container, .hearts, .letter-only, .flower-only').forEach(el=>{ if(el){ el.style.display=''; el.removeAttribute('aria-hidden'); }});
   }
 });
