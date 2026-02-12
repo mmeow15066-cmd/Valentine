@@ -6,10 +6,10 @@
   <title>Love Letter — Mi Vida</title>
   <meta name="description" content="A personal love letter with music.">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
-  <!-- LOCK OVERLAY -->
+  <!-- Lock overlay (present on every page) -->
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
@@ -25,12 +25,18 @@
     <a class="back-link" href="index.html">← Back</a>
 
     <div class="letter-wrap">
+      <!-- Open Letter button appears after unlock -->
       <button id="open-letter-btn" class="btn" style="display:none">Open Letter</button>
+
+      <!-- Big letter image initially hidden until Open Letter is clicked -->
       <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" class="blurred-img" tabindex="0" role="button" aria-label="Click to reveal the message and play music" style="display:none" />
+
       <p id="letter-instructions" class="muted small">Click the letter image below to reveal the message and play the music.</p>
 
+      <!-- Hidden message (revealed by clicking the full letter) -->
       <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true" style="display:none"></p>
 
+      <!-- Inline flowers (separate element) -->
       <figure id="inline-flowers" class="flower-figure inline" aria-hidden="true">
         <img id="flowers-inline" src="lilies.JPG" alt="Bouquet of lilies" />
         <figcaption class="muted small">A bouquet of lilies — for you.</figcaption>
@@ -50,6 +56,6 @@
   </main>
 
   <audio id="bg-music" src="music.mp3" preload="auto"></audio>
-  <script src="script.js?v=4" defer></script>
+  <script src="script.js?v=5" defer></script>
 </body>
 </html>
