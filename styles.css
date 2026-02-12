@@ -5,7 +5,7 @@
   --muted:#6b6b6b;
 }
 
-/* Basic reset */
+/* Basic reset and layout */
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -17,71 +17,72 @@ body{
   -moz-osx-font-smoothing:grayscale;
 }
 
-/* Shared button/link */
-.btn{
-  display:inline-block;
-  background:var(--accent);
-  color:white;
-  padding:0.5rem 0.9rem;
-  border-radius:8px;
-  text-decoration:none;
-  font-weight:600;
-  cursor:pointer;
-}
-
-/* Focus helper (visible on overlay; helps mobile) */
-.focus-helper{
-  display:block;
-  width:100%;
-  margin-bottom:8px;
-  padding:0.5rem;
-  border-radius:8px;
-  border:1px dashed rgba(0,0,0,0.06);
-  background:linear-gradient(180deg,#fff,#fffafc);
-  color:var(--muted);
-  font-size:0.95rem;
-  cursor:pointer;
-}
-
-/* Basic layout (rest kept minimal for brevity) */
+/* Container */
 .container{ max-width:980px; margin:1.5rem auto; padding:0 1rem 3rem; }
-.cover-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.08; pointer-events:none; }
-.letter-wrap{ max-width:720px; margin:0 auto; text-align:center; }
-.letter-wrap img{ width:100%; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,0.15); cursor:pointer; }
 
-/* Locks & hearts (index only) */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45));
-  z-index:2147483647;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:auto;
+/* Cover */
+.cover{ position:relative; display:flex; align-items:center; justify-content:center; padding:3rem 1rem; text-align:center; background:transparent; }
+.cover-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.06; pointer-events:none; }
+
+/* Intro */
+.intro h2{ font-family:"Great Vibes", cursive; color:var(--accent); font-size:2.2rem; margin-bottom:0.25rem; }
+.lead{ color:var(--muted); margin-top:0; margin-bottom:1rem; }
+
+/* Timers & Time cards */
+.timers{ display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+.time-card{ flex:1 1 240px; background:rgba(255,255,255,0.9); border-radius:10px; padding:1rem; box-shadow:0 6px 18px rgba(0,0,0,0.06); text-align:center; }
+
+/* Polaroid gallery — responsive grid (robust) */
+.gallery-section h2{ font-family:"Great Vibes", cursive; color:var(--accent); font-size:1.9rem; margin-bottom:0.8rem; }
+.polaroids{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap:1rem;
+  align-items:start;
 }
-.lock-box{
-  background:linear-gradient(180deg,#fff,#fff6f8);
-  border-radius:14px;
-  padding:1.6rem;
-  width:320px;
-  box-shadow:0 16px 48px rgba(0,0,0,0.4);
+.polaroid{
+  background:#fff;
+  padding:12px;
+  border-radius:8px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
   text-align:center;
 }
-.lock-box input{ width:100%; padding:0.6rem 0.75rem; margin-bottom:0.5rem; border-radius:8px; border:1px solid #e3d7db; font-size:1rem; -webkit-text-size-adjust:100%; }
-.lock-box button{ width:100%; padding:0.6rem; border-radius:8px; border:none; background:var(--accent); color:white; font-weight:600; cursor:pointer; }
-.lock-box .hint{ font-size:0.85rem; color:var(--muted); margin-top:0.5rem;}
-.error{ color:#c82333; margin-top:0.5rem; }
+.polaroid img{ width:100%; height:180px; object-fit:cover; border-radius:6px; display:block; }
+.polaroid figcaption{ margin-top:8px; font-family:"Dancing Script", cursive; color:var(--muted); }
 
-/* Blurred image style */
-.blurred-img{ filter: blur(6px); transition: filter 420ms cubic-bezier(.2,.9,.3,1), transform 220ms; cursor: pointer; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,0.15); }
-.revealed-img{ filter:none; cursor:default; }
+/* Letter thumbnail */
+.letter img{ width:100%; max-width:720px; display:block; margin:0 auto; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.08); cursor:pointer; }
+
+/* Letter page */
+.letter-wrap{ max-width:720px; margin:0 auto; text-align:center; }
+.hidden-letter{ display:none; }
+
+/* Flowers */
+.flower-figure.inline{ margin-top:16px; max-width:680px; margin-left:auto; margin-right:auto; text-align:center; }
+.flower-figure.inline img{ width:100%; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.12); }
+
+/* Buttons */
+.btn{ display:inline-block; background:var(--accent); color:#fff; padding:.5rem .9rem; border-radius:8px; text-decoration:none; font-weight:600; cursor:pointer; }
+
+/* Overlay & lock */
+.overlay{ position:fixed; inset:0; background:linear-gradient(180deg, rgba(20,10,10,0.35), rgba(20,10,10,0.45)); z-index:2147483647; display:flex; align-items:center; justify-content:center; }
+.lock-box{ width:340px; background:linear-gradient(180deg,#fff,#fffafc); padding:1.4rem; border-radius:12px; box-shadow:0 18px 60px rgba(0,0,0,0.25); text-align:center; }
+.lock-box h1{ margin:0 0 .6rem; font-family:"Great Vibes",cursive; color:var(--accent); font-size:1.9rem; }
+.lock-box input{ width:100%; padding:.6rem .75rem; border-radius:8px; border:1px solid #e3d7db; margin-bottom:.5rem; font-size:1rem; }
+.lock-box button{ width:100%; padding:.6rem; border-radius:8px; border:none; background:var(--accent); color:#fff; font-weight:700; cursor:pointer; }
+
+/* helper focus button for mobile */
+.focus-helper{ display:block; width:100%; margin-bottom:8px; padding:.5rem; border-radius:8px; border:1px dashed rgba(0,0,0,0.06); background:#fff; color:var(--muted); font-size:.95rem; cursor:pointer; }
+
+/* Letter image blurred / revealed states */
+.blurred-img{ filter: blur(6px); transition: filter 420ms cubic-bezier(.2,.9,.3,1); cursor:pointer; border-radius:8px; box-shadow:0 12px 40px rgba(0,0,0,0.12); }
+.revealed-img{ filter:none; }
 
 /* Message hidden until reveal */
-.flower-message{ display:none; margin-top:10px; font-family:"Dancing Script", cursive; font-size:1.05rem; color:var(--accent); text-align:center; max-width:100%; line-height:1.3; }
-.flower-message.show{ display:block; }
+.flower-message{ display:none; margin-top:12px; font-family:"Dancing Script", cursive; color:var(--accent); font-size:1.05rem; }
 
 /* small screens */
 @media (max-width:700px){
-  .letter-wrap img{ max-height:60vh; object-fit:cover; }
+  .polaroid img{ height:200px; }
+  .cover-title{ font-size:2rem; }
 }
