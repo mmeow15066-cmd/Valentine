@@ -24,24 +24,25 @@
     <a class="back-link" href="index.html">← Back</a>
 
     <div class="letter-wrap">
+      <!-- Open Letter button appears after unlock -->
       <button id="open-letter-btn" class="btn" style="display:none">Open Letter</button>
 
-      <!-- big letter hidden until open-letter clicked -->
+      <!-- Full letter image (hidden until open) -->
       <img id="letter-full" src="loveletter.JPG" alt="Love Letter (full)" class="blurred-img" style="display:none" tabindex="0" role="button" aria-label="Click to reveal the message and play music" />
 
       <p id="letter-instructions" class="muted small">Click the letter image below to reveal the message and play the music.</p>
 
-      <!-- message hidden until reveal -->
-      <p id="flower-message" class="flower-message" style="display:none" aria-live="polite" aria-hidden="true"></p>
+      <!-- Hidden message (kept empty to avoid duplication with visible note) -->
+      <p id="flower-message" class="flower-message" role="status" aria-live="polite" aria-hidden="true" style="display:none"></p>
 
-      <!-- inline flowers with the small note (caption) under the image -->
+      <!-- inline flowers with visible caption -->
       <figure id="inline-flowers" class="flower-figure inline" aria-hidden="true">
         <img id="flowers-inline" src="lilies.JPG" alt="Bouquet of lilies" />
         <figcaption class="muted small">A bouquet of lilies — for you.</figcaption>
       </figure>
 
-      <!-- preserve the small printed note (the one you said was missing) -->
-      <p class="flower-note muted small" aria-hidden="false">A little note with the flowers — always thinking of you.</p>
+      <!-- Visible note restored (your exact text) -->
+      <p class="flower-note muted small" aria-hidden="false">i hate the distance and im sorry i couldnt bring you flowers mi vida i promise you ill make it up to you one day</p>
 
       <div id="music-controls" class="music-controls" style="display:none" aria-hidden="true">
         <div style="display:flex;gap:.5rem;align-items:center;">
