@@ -14,8 +14,12 @@
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
-      <!-- mobile-friendly numeric input -->
-      <input id="password-input" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
+
+      <!-- Small helper to ensure mobile focus works reliably -->
+      <button id="focus-helper" class="focus-helper" type="button" aria-hidden="true">Tap here to enter the password</button>
+
+      <!-- Masked numeric hint (keeps characters hidden, hints numeric keyboard) -->
+      <input id="password-input" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
       <button id="unlock-btn" type="button">Unlock</button>
       <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
       <p id="lock-error" class="error" aria-live="polite"></p>
@@ -79,3 +83,4 @@
 
   <script src="script.js" defer></script>
 </body>
+</html>
