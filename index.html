@@ -9,16 +9,16 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="locked">
+<body>
   <!-- LOCK OVERLAY (present on every page) -->
   <div id="lock-overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="lock-title" aria-describedby="lock-hint" aria-hidden="false">
     <div class="lock-box" role="document">
       <h1 id="lock-title">Enter password</h1>
 
-      <!-- Small helper to ensure mobile focus works reliably -->
+      <!-- Focus helper (mobile) -->
       <button id="focus-helper" class="focus-helper" type="button" aria-hidden="true">Tap here to enter the password</button>
 
-      <!-- Masked numeric hint (keeps characters hidden, hints numeric keyboard) -->
+      <!-- Masked numeric hint -->
       <input id="password-input" type="password" inputmode="numeric" pattern="[0-9]*" placeholder="Password" aria-label="Password" autocomplete="off" />
       <button id="unlock-btn" type="button">Unlock</button>
       <p id="lock-hint" class="hint">Hint: it's a 4-digit code</p>
