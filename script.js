@@ -1,11 +1,11 @@
-// script.js — reliable lock + timers + letter behavior
+// script.js — lock, timers, letter reveal
 const UNLOCK_KEY = 'valentine_unlocked';
 const CORRECT_PASS = '0410';
 
 function safeLocalGet(){ try{ return localStorage.getItem(UNLOCK_KEY) === '1'; }catch(e){ return false; } }
 function safeLocalSet(){ try{ localStorage.setItem(UNLOCK_KEY,'1'); }catch(e){} }
 
-// ---- Lock overlay behavior ----
+// Init overlay lock
 function initUnlock(){
   const overlay = document.getElementById('lock-overlay');
   const input = document.getElementById('password-input');
@@ -15,21 +15,18 @@ function initUnlock(){
 
   if(!overlay || !input || !btn) return;
 
-  // ensure overlay is on top
   overlay.style.zIndex = '999999';
   overlay.style.pointerEvents = 'auto';
-  try{ document.body.appendChild(overlay); }catch(e){}
+  try{ document.body.appendChild(overlay); } catch(e){}
 
-  // helper to focus input on mobile
-  if(helper) helper.addEventListener('click', ()=> { try{ input.focus(); }catch(e){} });
+  if(helper) helper.addEventListener('click', ()=> { try{ input.focus(); } catch(e){} });
 
-  // touch focus for iOS quirks
   overlay.addEventListener('touchstart', function onT(){ try{ input.focus(); }catch(e){} overlay.removeEventListener('touchstart', onT); }, { passive:true });
 
   function revealSite(){
     overlay.style.display = 'none';
     overlay.setAttribute('aria-hidden','true');
-    // show Open Letter button if present (letter page)
+    // show open-letter button in case we're on letter page
     const openBtn = document.getElementById('open-letter-btn');
     if(openBtn) openBtn.style.display = '';
     document.dispatchEvent(new Event('site-unlocked'));
@@ -51,9 +48,8 @@ function initUnlock(){
     }
   });
 
-  input.addEventListener('keydown', (e)=> { if(e.key === 'Enter'){ btn.click(); e.preventDefault(); }});
+  input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ btn.click(); e.preventDefault(); }});
 
-  // Start state
   if(safeLocalGet()){
     revealSite();
   } else {
@@ -62,13 +58,13 @@ function initUnlock(){
   }
 }
 
-// ---- Timers ----
+// Timers
 function initTimers(){
   const sinceEl = document.getElementById('since');
   const countdownEl = document.getElementById('countdown');
   if(!sinceEl && !countdownEl) return;
 
-  const startDate = new Date(Date.UTC(2025,9,4,0,0,0)); // 04 Oct 2025 UTC
+  const startDate = new Date(Date.UTC(2025,9,4,0,0,0)); // adjust if needed
 
   function pad(n){ return n.toString().padStart(2,'0'); }
   function update(){
@@ -95,7 +91,7 @@ function initTimers(){
   setInterval(update, 1000);
 }
 
-// ---- Letter page behavior ----
+// Letter page behavior
 function initLetterPage(){
   const openBtn = document.getElementById('open-letter-btn');
   const letterFull = document.getElementById('letter-full');
@@ -109,25 +105,10 @@ function initLetterPage(){
 
   if(!openBtn || !letterFull || !messageEl) return;
 
-  const MESSAGE = "i hate the distance and im sorry i couldnt bring you flowers mi vida i promise you ill make it up to you one day";
-  messageEl.textContent = MESSAGE;
+  // hidden message left empty on purpose (note visible separately)
+  messageEl.textContent = '';
   messageEl.style.display = 'none';
   messageEl.setAttribute('aria-hidden','true');
-
-  function reveal(){
-    letterFull.classList.remove('blurred-img');
-    letterFull.classList.add('revealed-img');
-    letterFull.removeAttribute('role');
-    messageEl.style.display = '';
-    messageEl.setAttribute('aria-hidden','false');
-    if(musicControls){ musicControls.style.display = 'block'; musicControls.setAttribute('aria-hidden','false'); }
-    if(instructions) instructions.style.display = 'none';
-    if(bgMusic){
-      try{ bgMusic.volume = parseFloat((volume && volume.value) || '0.8'); }catch(e){}
-      bgMusic.currentTime = 0;
-      bgMusic.play().catch(()=>{});
-    }
-  }
 
   openBtn.addEventListener('click', ()=>{
     letterFull.style.display = '';
@@ -142,25 +123,39 @@ function initLetterPage(){
     }
   });
 
-  if(safeLocalGet()){
-    // show Open Letter button if unlocked
-    const ob = document.getElementById('open-letter-btn'); if(ob) ob.style.display = '';
-  } else {
-    document.addEventListener('site-unlocked', ()=>{ const ob = document.getElementById('open-letter-btn'); if(ob) ob.style.display = ''; }, { once:true });
+  function reveal(){
+    letterFull.classList.remove('blurred-img');
+    letterFull.classList.add('revealed-img');
+    letterFull.removeAttribute('role');
+    if(messageEl.textContent && messageEl.textContent.trim() !== ''){
+      messageEl.style.display = '';
+      messageEl.setAttribute('aria-hidden','false');
+    }
+    if(musicControls){ musicControls.style.display = 'block'; musicControls.setAttribute('aria-hidden','false'); }
+    if(instructions) instructions.style.display = 'none';
+    if(bgMusic){
+      try{ bgMusic.volume = parseFloat((volume && volume.value) || '0.8'); }catch(e){}
+      bgMusic.currentTime = 0;
+      bgMusic.play().catch(()=>{});
+    }
   }
+
+  // show open button when unlocked
+  if(safeLocalGet()){ openBtn.style.display = ''; }
+  else document.addEventListener('site-unlocked', ()=>{ openBtn.style.display = ''; }, { once:true });
 
   if(playBtn) playBtn.addEventListener('click', ()=>{ if(bgMusic) bgMusic.play(); playBtn.style.display='none'; if(pauseBtn) pauseBtn.style.display='inline-block'; });
   if(pauseBtn) pauseBtn.addEventListener('click', ()=>{ if(bgMusic){ bgMusic.pause(); pauseBtn.style.display='none'; if(playBtn) playBtn.style.display='inline-block'; }});
   if(volume) volume.addEventListener('input', ()=>{ if(bgMusic) bgMusic.volume = parseFloat(volume.value); });
 }
 
-// ---- Bootstrap ----
+// Boot
 document.addEventListener('DOMContentLoaded', ()=>{
-  try {
+  try{
     initUnlock();
     initTimers();
     initLetterPage();
-  } catch(e){
-    console.error('Bootstrap error', e);
+  }catch(e){
+    console.error('init error', e);
   }
 });
